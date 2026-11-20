@@ -1,0 +1,74 @@
+---
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+import { showTempPhotos } from '../data/site';
+
+interface Props {
+  src: ImageMetadata;
+  /** Thai alt text describing the picture. */
+  alt: string;
+  /**
+   * The image is a temporary AI stand-in for a real photo. It only renders
+   * when temp photos are enabled; otherwise the slot shows a waiting pattern.
+   */
+  temp?: boolean;
+  /** Label the picture as an illustration ("ภาพประกอบ"). */
+  illustration?: boolean;
+  /** CSS aspect-ratio, e.g. "4 / 3". Omit when the parent sizes the box. */
+  ratio?: string;
+  radius?: number;
+  /** CSS object-position for the crop. */
+  position?: string;
+  widths?: number[];
+  sizes?: string;
+  /** Hide the "waiting for photo" text in very small slots. */
+  compact?: boolean;
+  loading?: 'eager' | 'lazy';
+  class?: string;
+  style?: string;
+}
+
+const {
+  src,
+  alt,
+  temp = false,
+  illustration = false,
+  ratio,
+  radius,
+  position,
+  widths = [480, 800, 1200],
+  sizes = '(max-width: 700px) 100vw, 600px',
+  compact = false,
+  loading = 'lazy',
+  class: className,
+  style = '',
+  ...rest
+} = Astro.props;
+
+const waiting = temp && !showTempPhotos;
+const vars = [ratio && `--ratio:${ratio}`, radius && `--radius:${radius}px`, style]
+  .filter(Boolean)
+  .join(';');
+---
+
+<div class:list={['photo', className]} style={vars || undefined} {...rest}>
+  {
+    waiting ? (
+      <span class="photo-wait" role="img" aria-label={`${alt} (รอรูปจริง)`}>
+        {!compact && 'รอรูปจริง'}
+      </span>
+    ) : (
+      <Image
+        class="photo-img"
+        src={src}
+        alt={temp ? `${alt} (ภาพชั่วคราว)` : alt}
+        widths={widths.filter((w) => w <= src.width)}
+        sizes={sizes}
+        loading={loading}
+        style={position ? `object-position:${position}` : undefined}
+      />
+    )
+  }
+  {illustration && !waiting && <span class="photo-badge">ภาพประกอบ</span>}
+  <slot />
+</div>

@@ -1,0 +1,50 @@
+---
+import '@fontsource-variable/anuphan';
+import '@fontsource/noto-sans-thai-looped/400.css';
+import '@fontsource/noto-sans-thai-looped/500.css';
+import '@fontsource/noto-sans-thai-looped/600.css';
+import '@fontsource-variable/fraunces/opsz.css';
+import '../styles/global.css';
+
+import Footer from '../components/Footer.astro';
+import Header from '../components/Header.astro';
+import { site, type NavId } from '../data/site';
+
+interface Props {
+  /** Page name; the brand name is appended. Omit on the home page. */
+  title?: string;
+  description: string;
+  current?: NavId;
+}
+
+const { title, description, current } = Astro.props;
+const fullTitle = title
+  ? `${title} | ${site.name}`
+  : `${site.name} - ${site.nameTh} | ${site.breed}`;
+const canonical = Astro.site ? new URL(Astro.url.pathname, Astro.site) : undefined;
+---
+
+<!doctype html>
+<html lang="th">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    {canonical && <link rel="canonical" href={canonical} />}
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="th_TH" />
+    <meta name="theme-color" content="#FCF9F5" />
+  </head>
+  <body>
+    <div class="site">
+      <Header current={current} />
+      <main>
+        <slot />
+      </main>
+      <Footer />
+    </div>
+  </body>
+</html>

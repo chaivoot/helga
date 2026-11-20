@@ -1,0 +1,173 @@
+---
+import { render } from 'astro:content';
+import CtaBanner from '../../components/CtaBanner.astro';
+import Photo from '../../components/Photo.astro';
+import { ageLabel, dateLabel, getJournalPosts, type JournalPost } from '../../data/journal';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+export async function getStaticPaths() {
+  const posts = await getJournalPosts();
+  return posts.map((post, i) => ({
+    params: { id: post.id },
+    // Posts are sorted newest first, so "next" is the one before it in the list.
+    props: { post, newer: posts[i - 1], older: posts[i + 1] },
+  }));
+}
+
+interface Props {
+  post: JournalPost;
+  newer?: JournalPost;
+  older?: JournalPost;
+}
+
+const { post, newer, older } = Astro.props;
+const { data } = post;
+const { Content } = await render(post);
+---
+
+<BaseLayout title={data.title} current="journal" description={data.excerpt}>
+  <article class="wrap stack post" style="--wrap:800px;--gap:22px">
+    <nav class="breadcrumb" aria-label="breadcrumb">
+      <a href="/">หน้าแรก</a> / <a href="/journal/">บันทึกเฮลก้า</a> / {data.title}
+    </nav>
+    <div class="meta">
+      <span class="meta-age">{ageLabel(data.ageMonths)}</span>
+      <span class="meta-tag">{data.category}</span>
+      <span class="meta-date">{dateLabel(data.date)}</span>
+    </div>
+    <h1>{data.title}</h1>
+    <Photo
+      src={data.cover}
+      alt="ภาพหลักของโพสต์"
+      temp={data.tempPhotos}
+      ratio="16 / 10"
+      radius={24}
+      sizes="(max-width: 840px) 100vw, 800px"
+      widths={[480, 800, 1200, 1600]}
+      loading="eager"
+    />
+    <div class="content stack" style="--gap:18px">
+      <Content />
+    </div>
+    {
+      data.gallery.length > 0 && (
+        <div class="gallery">
+          {data.gallery.map((photo, i) => (
+            <Photo
+              src={photo}
+              alt={`ภาพแกลเลอรี ${i + 1}`}
+              temp={data.tempPhotos}
+              ratio="1 / 1"
+              radius={16}
+              widths={[480]}
+              sizes="(max-width: 840px) 33vw, 260px"
+            />
+          ))}
+        </div>
+      )
+    }
+    <div class="pager">
+      <a href="/journal/" class="pager-all">← บันทึกทั้งหมด</a>
+      <span class="pager-links">
+        {older && <a href={`/journal/${older.id}/`}>ก่อนหน้า</a>}
+        {older && newer && ' / '}
+        {newer && <a href={`/journal/${newer.id}/`}>ถัดไป</a>}
+      </span>
+    </div>
+  </article>
+
+  <section class="wrap cta" style="--wrap:800px">
+    <CtaBanner
+      href="/puppies/"
+      title="อยากได้ลูกของเฮลก้า?"
+      text="ลงชื่อรอครอกแรกไว้ก่อนได้"
+      action="ลงชื่อรอครอกแรก"
+      size="sm"
+    />
+  </section>
+</BaseLayout>
+
+<style>
+  .post {
+    padding-block: 48px 40px;
+  }
+  .meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+    font-size: 14px;
+  }
+  .meta-age {
+    background: var(--amber);
+    color: #fff;
+    font-weight: 600;
+    padding: 6px 14px;
+    border-radius: 999px;
+  }
+  .meta-tag {
+    background: var(--sand);
+    color: var(--brown);
+    padding: 6px 12px;
+    border-radius: 999px;
+  }
+  .meta-date {
+    color: var(--muted);
+  }
+  h1 {
+    font-size: clamp(30px, 4vw, 44px);
+    line-height: 1.25;
+  }
+
+  .content {
+    font-size: 17px;
+    line-height: 1.9;
+    color: var(--ink-soft);
+  }
+  .content :global(:is(p, ul, ol, blockquote)) {
+    margin: 0;
+  }
+  .content :global(h2) {
+    margin: 8px 0 0;
+    font-size: 24px;
+    line-height: normal;
+    color: var(--ink);
+  }
+  .content :global(h3) {
+    margin: 4px 0 0;
+    font-size: 20px;
+    line-height: normal;
+    color: var(--ink);
+  }
+  .content :global(img) {
+    max-width: 100%;
+    height: auto;
+    border-radius: 16px;
+  }
+
+  .gallery {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .pager {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 12px;
+    border-top: 1px solid var(--line);
+    padding-top: 20px;
+    font-size: 15px;
+  }
+  .pager-all {
+    font-weight: 600;
+  }
+  .pager-links {
+    color: var(--muted);
+  }
+
+  .cta {
+    padding-bottom: 72px;
+  }
+</style>

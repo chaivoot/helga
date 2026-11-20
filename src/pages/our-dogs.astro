@@ -1,0 +1,302 @@
+---
+import Icon from '../components/Icon.astro';
+import Photo from '../components/Photo.astro';
+import { images } from '../data/images';
+import { site } from '../data/site';
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const facts = [
+  { label: 'เพศ', value: 'เมีย' },
+  { label: 'สี', value: 'ไบแบล็ก' },
+  { label: 'วันเกิด', value: '[ ]' },
+];
+
+const parents = [
+  {
+    role: 'พ่อ',
+    text: 'สีไตรคัลเลอร์ สายประกวด ใบเพ็ดดีกรีสมาคมพัฒนาพันธุ์สุนัขแห่งประเทศไทย',
+    swatches: ['#2B2B2B', '#B9874D', '#FFFFFF'],
+  },
+  {
+    role: 'แม่',
+    text: 'สีบลูเมิร์ล ใบเพ็ดดีกรีสมาคมพัฒนาพันธุ์สุนัขแห่งประเทศไทย',
+    swatches: ['#8E9AA6', '#2B2B2B', '#FFFFFF'],
+  },
+];
+
+const ages = [
+  { photo: images.biblackPupTile, alt: 'เฮลก้าอายุ 2 เดือน', caption: '2 เดือน' },
+  { photo: images.biblackPupGrass, alt: 'เฮลก้าอายุ 3 เดือน', caption: '3 เดือน' },
+  { photo: images.biblackPupTile, alt: 'เฮลก้า ช่วงอายุถัดไป', caption: '[ ] เดือน', pending: true },
+  {
+    photo: images.biblackAdultStand,
+    alt: 'เฮลก้า ช่วงอายุถัดไป',
+    caption: '[ ] เดือน',
+    pending: true,
+  },
+];
+---
+
+<BaseLayout
+  title="พ่อแม่พันธุ์ของเรา"
+  current="dogs"
+  description={`ลูกสุนัขที่ดีเริ่มจากพ่อแม่ที่แข็งแรงและนิสัยดี พบกับเฮลก้า เชลตี้ตัวแรกและผู้ก่อตั้ง ${site.name}`}
+>
+  <!-- Page hero -->
+  <section class="wrap stack hero">
+    <nav class="breadcrumb" aria-label="breadcrumb"><a href="/">หน้าแรก</a> / พ่อแม่พันธุ์</nav>
+    <h1 class="page-title">พ่อแม่พันธุ์ของเรา</h1>
+    <p class="lead" style="max-width:680px">
+      ลูกสุนัขที่ดีเริ่มจากพ่อแม่ที่แข็งแรงและนิสัยดี นี่คือสุนัขของ {site.name}
+    </p>
+  </section>
+
+  <!-- Helga profile -->
+  <section class="wrap helga">
+    <article class="profile">
+      <Photo class="profile-photo" src={images.biblackPupGrass} alt="ภาพเฮลก้า" temp loading="eager">
+        <span class="pill pill--over pill--caps" style="background:var(--amber)">DAM</span>
+      </Photo>
+      <div class="profile-body stack" style="--gap:20px">
+        <div class="stack" style="--gap:4px">
+          <h2>Helga <span>(เฮลก้า)</span></h2>
+          <span class="profile-sub">เชลตี้ตัวแรกและผู้ก่อตั้ง {site.name}</span>
+        </div>
+        <dl class="facts">
+          {
+            facts.map((fact) => (
+              <div>
+                <dt>{fact.label}</dt>
+                <dd>{fact.value}</dd>
+              </div>
+            ))
+          }
+        </dl>
+        <div class="stack" style="--gap:6px">
+          <h3>นิสัย</h3>
+          <p class="profile-text">[นิสัยเฮลก้า 1-2 ประโยค]</p>
+        </div>
+        <div class="stack" style="--gap:10px">
+          <h3>สายเลือด</h3>
+          <div class="parents">
+            {
+              parents.map((parent) => (
+                <div class="parent">
+                  <div class="swatches" aria-hidden="true">
+                    {parent.swatches.map((color) => <span style={`background:${color}`} />)}
+                  </div>
+                  <div class="parent-text">
+                    <strong>{parent.role}</strong>
+                    <span>{parent.text}</span>
+                  </div>
+                </div>
+              ))
+            }
+          </div>
+        </div>
+        <a href="/journal/" class="text-link" style="align-self:flex-start"
+          >อ่านบันทึกการเติบโตของเฮลก้า →</a
+        >
+      </div>
+    </article>
+  </section>
+
+  <!-- Gallery by age -->
+  <section class="band-sand">
+    <div class="wrap stack ages" style="--gap:28px">
+      <h2 class="section-title">เฮลก้าตามช่วงอายุ</h2>
+      <div class="age-grid">
+        {
+          ages.map((age) => (
+            <figure class="stack" style="--gap:10px">
+              <Photo
+                src={age.photo}
+                alt={age.alt}
+                temp
+                ratio="1 / 1"
+                radius={18}
+                widths={[480]}
+                sizes="(max-width: 700px) 50vw, 280px"
+              />
+              <figcaption class:list={{ pending: age.pending }}>{age.caption}</figcaption>
+            </figure>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- Sire: coming soon -->
+  <section class="wrap stack sire" style="--gap:24px">
+    <h2 class="section-title">พ่อพันธุ์</h2>
+    <article class="sire-card">
+      <div class="sire-photo">
+        <span class="pill pill--over pill--caps" style="background:var(--slate)">SIRE</span>
+        <Icon name="paw" size={72} sw={1.4} color="#A99C90" />
+      </div>
+      <div class="sire-body stack" style="--gap:14px">
+        <span class="soon">Coming soon</span>
+        <h3>กำลังคัดเลือกพ่อพันธุ์ที่เหมาะสม</h3>
+        <p class="profile-text">
+          เราจะเลือกพ่อพันธุ์ที่มีใบเพ็ดดีกรี สุขภาพแข็งแรง และนิสัยดี ก่อนเฮลก้าจะพร้อมเป็นแม่
+          โปรไฟล์จะขึ้นที่นี่เมื่อเลือกได้แล้ว
+        </p>
+      </div>
+    </article>
+  </section>
+</BaseLayout>
+
+<style>
+  .hero {
+    padding-block: 56px 24px;
+  }
+
+  .helga {
+    padding-block: 24px 56px;
+  }
+  .profile {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 28px;
+    overflow: hidden;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  }
+  .profile :global(.profile-photo) {
+    min-height: 420px;
+  }
+  .profile-body {
+    padding: 36px;
+  }
+  .profile h2 {
+    font-size: 38px;
+    line-height: 1.2;
+  }
+  .profile h2 span {
+    color: var(--muted);
+    font-weight: 500;
+  }
+  .profile-sub {
+    font-size: 16px;
+    color: var(--muted);
+  }
+  .profile h3 {
+    font-size: 17px;
+  }
+  .profile-text {
+    font-size: 16px;
+    line-height: 1.75;
+    color: var(--ink-soft);
+  }
+  .facts {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+  }
+  .facts div {
+    background: var(--bg);
+    border-radius: 14px;
+    padding: 14px;
+  }
+  .facts dt {
+    font-size: 13px;
+    color: var(--muted);
+  }
+  .facts dd {
+    margin-top: 4px;
+    font-weight: 600;
+    font-size: 16px;
+  }
+  .parents {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 12px;
+  }
+  .parent {
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 16px;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+  }
+  .swatches {
+    display: flex;
+    gap: 3px;
+    margin-top: 4px;
+  }
+  .swatches span {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  /* The white swatch needs an outline to show on a white card. */
+  .swatches span:last-child {
+    width: 14px;
+    height: 14px;
+    border: 1px solid var(--line-strong);
+  }
+  .parent-text {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-size: 15px;
+    line-height: 1.6;
+  }
+  .parent-text span {
+    color: var(--ink-soft);
+  }
+
+  .ages {
+    padding-block: 64px;
+  }
+  .age-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+  }
+  figcaption {
+    font-size: 15px;
+    font-weight: 600;
+  }
+  figcaption.pending {
+    color: var(--muted);
+  }
+
+  .sire {
+    padding-block: 64px 80px;
+  }
+  .sire-card {
+    border: 1.5px dashed var(--line-strong);
+    border-radius: 28px;
+    overflow: hidden;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    background: var(--surface);
+  }
+  .sire-photo {
+    min-height: 280px;
+    background: var(--sand-mute);
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .sire-body {
+    padding: 36px;
+    justify-content: center;
+  }
+  .sire-body h3 {
+    font-size: 26px;
+  }
+  .soon {
+    align-self: flex-start;
+    background: var(--slate-bg);
+    color: var(--slate-ink);
+    font-size: 13px;
+    font-weight: 700;
+    padding: 5px 12px;
+    border-radius: 999px;
+  }
+</style>

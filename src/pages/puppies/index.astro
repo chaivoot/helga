@@ -1,0 +1,279 @@
+---
+import CtaBanner from '../../components/CtaBanner.astro';
+import Icon from '../../components/Icon.astro';
+import Photo from '../../components/Photo.astro';
+import { images } from '../../data/images';
+import { site } from '../../data/site';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const sexes = [
+  { value: 'male', label: 'เพศผู้' },
+  { value: 'female', label: 'เพศเมีย' },
+  { value: 'any', label: 'ได้ทั้งคู่' },
+];
+const defaultSex = 'any';
+
+const colors = [
+  'ยังไม่แน่ใจ',
+  'เซเบิล (Sable)',
+  'ไตรคัลเลอร์ (Tricolor)',
+  'ไบแบล็ก (Bi-Black)',
+  'บลูเมิร์ล (Blue Merle)',
+  'อื่นๆ',
+];
+---
+
+<BaseLayout
+  title="ลูกสุนัข ลงชื่อรอครอกแรก"
+  current="puppies"
+  description={`ครอกแรกของ ${site.name} จะเกิดขึ้นเมื่อเฮลก้าเติบโตเต็มที่และผ่านการตรวจสุขภาพแล้ว ลงชื่อรอไว้ เราจะติดต่อกลับเป็นกลุ่มแรกเมื่อมีข่าว`}
+>
+  <!-- Page hero -->
+  <section class="band-sand">
+    <div class="wrap split hero">
+      <div class="stack" style="--gap:18px">
+        <nav class="breadcrumb" aria-label="breadcrumb"><a href="/">หน้าแรก</a> / ลูกสุนัข</nav>
+        <h1 class="page-title">ครอกแรกของ {site.name}</h1>
+        <p class="lead" style="max-width:560px">
+          ตอนนี้เฮลก้ายังเป็นลูกสุนัข
+          ครอกแรกของเราจะเกิดขึ้นเมื่อเธอเติบโตเต็มที่และผ่านการตรวจสุขภาพแล้ว ลงชื่อไว้
+          เราจะติดต่อกลับเป็นกลุ่มแรกเมื่อมีข่าว
+        </p>
+        <a href="#waitlist" class="btn" style="align-self:flex-start">ลงชื่อรอครอกแรก</a>
+      </div>
+      <div class="status stack">
+        <span class="eyebrow">สถานะตอนนี้</span>
+        <div class="status-who">
+          <Photo
+            class="status-photo"
+            src={images.biblackPupGrass}
+            alt="ภาพเฮลก้า"
+            temp
+            compact
+            widths={[200]}
+            sizes="72px"
+          />
+          <div class="stack" style="--gap:4px">
+            <strong class="head-font">เฮลก้ายังเป็นลูกสุนัข</strong>
+            <span>ยังไม่มีลูกสุนัขของ {site.name} พร้อมส่งมอบ</span>
+          </div>
+        </div>
+        <dl class="status-facts">
+          <div><dt>พ่อพันธุ์</dt><dd>กำลังคัดเลือก</dd></div>
+          <div><dt>ครอกแรก</dt><dd>[ปีโดยประมาณ หรือ เมื่อเฮลก้าพร้อมเต็มที่]</dd></div>
+        </dl>
+      </div>
+    </div>
+  </section>
+
+  <!-- What every puppy gets -->
+  <section class="wrap stack gets" style="--gap:32px">
+    <h2 class="section-title">ก่อนย้ายบ้าน ลูกสุนัขทุกตัวจะได้รับ</h2>
+    <ul class="gets-list">
+      <li>
+        <Icon name="checkCircle" size={26} />
+        <span
+          >วัคซีน 2 เข็ม ครบตามช่วงอายุ 2 เดือน <span class="todo">[รอเจ้าของยืนยันถ้อยคำ]</span></span
+        >
+      </li>
+      <li><Icon name="checkCircle" size={26} /><span>ตรวจสุขภาพโดยสัตวแพทย์</span></li>
+      <li>
+        <Icon name="checkCircle" size={26} /><span>การฝึกขั้นพื้นฐาน และการปูนิสัยตั้งแต่เล็ก</span>
+      </li>
+      <li>
+        <Icon name="checkCircle" size={26} /><span
+          >ใบเพ็ดดีกรีจดทะเบียนจากสมาคมพัฒนาพันธุ์สุนัขแห่งประเทศไทย</span
+        >
+      </li>
+    </ul>
+    <a href="/puppies/program/" class="text-link">ดูรายละเอียดโปรแกรมเตรียมความพร้อม →</a>
+  </section>
+
+  <!-- Waitlist form -->
+  <section id="waitlist" class="band-white">
+    <div class="wrap stack waitlist" style="--wrap:760px;--gap:28px" data-form-wrap>
+      <div class="stack" style="--gap:10px">
+        <span class="eyebrow">WAITLIST</span>
+        <h2 class="section-title">ลงชื่อรอครอกแรก</h2>
+        <p class="waitlist-note">
+          การลงชื่อไม่ใช่การจอง และไม่ต้องโอนเงินใดๆ เราจะติดต่อกลับเมื่อมีข่าวครอกแรก
+        </p>
+      </div>
+      <form class="form" data-form="waitlist">
+        <div class="form-row">
+          <label class="field"
+            >ชื่อ
+            <input type="text" name="name" required autocomplete="name" />
+          </label>
+          <label class="field"
+            >เบอร์โทร
+            <input type="tel" name="phone" autocomplete="tel" />
+          </label>
+        </div>
+        <label class="field"
+          >LINE ID
+          <input type="text" name="line" />
+        </label>
+        <fieldset class="choice" data-choice>
+          <legend>เพศที่สนใจ</legend>
+          <input type="hidden" name="sex" value={defaultSex} />
+          <div class="chips chips--brown">
+            {
+              sexes.map((sex) => (
+                <button
+                  type="button"
+                  class="chip"
+                  data-value={sex.value}
+                  data-default={sex.value === defaultSex ? '' : undefined}
+                  aria-pressed={sex.value === defaultSex ? 'true' : 'false'}
+                >
+                  {sex.label}
+                </button>
+              ))
+            }
+          </div>
+        </fieldset>
+        <label class="field"
+          >สีที่สนใจ
+          <select name="color">
+            {colors.map((color) => <option>{color}</option>)}
+          </select>
+        </label>
+        <label class="field"
+          >ข้อความเพิ่มเติม
+          <textarea name="message" rows="4"></textarea>
+        </label>
+        <button type="submit" class="btn form-submit">ส่งชื่อเข้ารายชื่อรอ</button>
+        <p class="form-error" data-form-error role="alert" hidden>
+          ส่งไม่สำเร็จ กรุณาลองอีกครั้ง หรือทัก LINE มาได้เลย
+        </p>
+        <p class="form-fineprint">[ข้อความนโยบายการใช้ข้อมูลส่วนบุคคล - รอเจ้าของยืนยัน]</p>
+      </form>
+      <div class="form-done stack done" style="--gap:10px" role="status" tabindex="-1" data-form-done hidden>
+        <strong class="form-done-title">ขอบคุณที่ลงชื่อไว้</strong>
+        <p>
+          เราจะติดต่อกลับเป็นกลุ่มแรกเมื่อมีข่าวครอกแรก
+          ระหว่างนี้ติดตามการเติบโตของเฮลก้าได้ที่บันทึกเฮลก้า
+        </p>
+        <button type="button" class="form-reset" data-form-reset>กลับไปที่ฟอร์ม</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Partner link -->
+  <section class="wrap partner">
+    <CtaBanner
+      href="/puppies/partners/"
+      title="ไม่อยากรอ?"
+      text="ดูลูกเชลตี้จากฟาร์มพันธมิตร ที่เราคัดเลือกด้วยมาตรฐานเดียวกัน"
+      action="ดูลูกเชลตี้พันธมิตร"
+      actionTone="dark"
+      size="lg"
+    />
+  </section>
+</BaseLayout>
+
+<script>
+  import '../../scripts/forms';
+</script>
+
+<style>
+  .hero {
+    padding-block: 56px;
+  }
+  .status {
+    background: var(--surface);
+    border-radius: 24px;
+    padding: 28px;
+  }
+  .status-who {
+    display: flex;
+    gap: 14px;
+    align-items: center;
+  }
+  .status-who :global(.status-photo) {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .status-who strong {
+    font-size: 19px;
+  }
+  .status-who span {
+    font-size: 15px;
+    color: var(--muted);
+  }
+  .status-facts {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    border-top: 1px solid var(--line);
+    padding-top: 16px;
+    font-size: 15px;
+  }
+  .status-facts div {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .status-facts dt {
+    color: var(--muted);
+  }
+  .status-facts dd {
+    font-weight: 500;
+  }
+
+  .gets {
+    padding-block: 72px;
+  }
+  .gets-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 16px;
+  }
+  .gets-list li {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 20px;
+    padding: 22px;
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    font-size: 16px;
+    line-height: 1.65;
+  }
+  .gets-list :global(svg) {
+    color: var(--brown);
+  }
+
+  .waitlist {
+    padding-block: 72px;
+  }
+  .waitlist-note {
+    font-size: 16px;
+    line-height: 1.75;
+    color: var(--muted);
+  }
+  .choice {
+    border: 0;
+    margin: 0;
+    padding: 0;
+    min-width: 0;
+  }
+  .choice legend {
+    font-size: 15px;
+    font-weight: 500;
+    padding: 0;
+    margin-bottom: 10px;
+  }
+  .done {
+    background: var(--sand);
+    border-radius: 20px;
+    padding: 28px;
+  }
+
+  .partner {
+    padding-block: 56px 72px;
+  }
+</style>

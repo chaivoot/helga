@@ -1,0 +1,176 @@
+---
+import { nav, site, type NavId } from '../data/site';
+import Icon from './Icon.astro';
+
+interface Props {
+  current?: NavId;
+}
+const { current } = Astro.props;
+---
+
+<header class="hdr">
+  <div class="wrap bar">
+    <a href="/" class="brand">
+      <span class="brand-name">{site.name}</span>
+      <span class="brand-tag">SHETLAND SHEEPDOG</span>
+    </a>
+    <nav class="nav" aria-label="เมนูหลัก">
+      {
+        nav.map((item) => (
+          <a
+            href={item.href}
+            class:list={['nav-link', { 'is-current': item.id === current }]}
+            aria-current={item.id === current ? 'page' : undefined}
+          >
+            {item.label}
+          </a>
+        ))
+      }
+      <a href={site.contact.lineUrl} class="nav-line">ทัก LINE</a>
+    </nav>
+    <button
+      class="burger"
+      type="button"
+      aria-label="เปิดเมนู"
+      aria-expanded="false"
+      aria-controls="mobile-menu"
+      data-menu-toggle
+    >
+      <Icon name="menu" size={22} />
+    </button>
+  </div>
+  <nav id="mobile-menu" class="mnav" aria-label="เมนูมือถือ" hidden>
+    {
+      nav.map((item) => (
+        <>
+          <a href={item.href} class:list={[{ 'is-current': item.id === current }]}>
+            {item.label}
+          </a>
+          {item.id === 'puppies' && (
+            <a href="/puppies/partners/" class="mnav-sub">
+              ลูกเชลตี้จากฟาร์มพันธมิตร
+            </a>
+          )}
+        </>
+      ))
+    }
+  </nav>
+</header>
+
+<script>
+  const toggle = document.querySelector<HTMLButtonElement>('[data-menu-toggle]');
+  const menu = document.getElementById('mobile-menu');
+  if (toggle && menu) {
+    toggle.addEventListener('click', () => {
+      const open = menu.hidden;
+      menu.hidden = !open;
+      toggle.setAttribute('aria-expanded', String(open));
+      toggle.setAttribute('aria-label', open ? 'ปิดเมนู' : 'เปิดเมนู');
+    });
+  }
+</script>
+
+<style>
+  .hdr {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    background: rgba(252, 249, 245, 0.96);
+    border-bottom: 1px solid var(--line);
+  }
+  .bar {
+    padding-block: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+  .brand {
+    display: flex;
+    flex-direction: column;
+    text-decoration: none;
+    color: var(--ink);
+    line-height: 1.1;
+  }
+  .brand-name {
+    font-family: var(--font-brand);
+    font-size: 26px;
+    font-weight: 500;
+  }
+  .brand-tag {
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+  }
+  .nav {
+    display: flex;
+    align-items: center;
+    gap: 26px;
+    font-size: 15px;
+  }
+  .nav-link {
+    text-decoration: none;
+    color: var(--ink);
+  }
+  .nav-link.is-current {
+    font-weight: 600;
+    border-bottom: 2px solid var(--amber);
+    padding-bottom: 2px;
+  }
+  .nav-line {
+    text-decoration: none;
+    background: var(--line-green);
+    color: var(--line-ink);
+    font-weight: 600;
+    padding: 10px 18px;
+    border-radius: 999px;
+  }
+  .burger {
+    display: none;
+    width: 44px;
+    height: 44px;
+    border: 1px solid #ddd3c7;
+    background: var(--surface);
+    color: var(--ink);
+    border-radius: 12px;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  }
+  .mnav {
+    display: flex;
+    flex-direction: column;
+    padding: 8px 20px 20px;
+    gap: 4px;
+    font-size: 17px;
+    border-top: 1px solid var(--line);
+    background: var(--bg);
+  }
+  .mnav a {
+    padding: 12px 0;
+    text-decoration: none;
+    color: var(--ink);
+  }
+  .mnav a.is-current {
+    font-weight: 600;
+  }
+  .mnav a.mnav-sub {
+    padding-left: 16px;
+    color: var(--muted);
+    font-size: 15px;
+  }
+
+  @media (max-width: 860px) {
+    .nav {
+      display: none;
+    }
+    .burger {
+      display: flex;
+    }
+  }
+  @media (min-width: 861px) {
+    .mnav {
+      display: none;
+    }
+  }
+</style>

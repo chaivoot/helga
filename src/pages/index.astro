@@ -1,0 +1,673 @@
+---
+import Icon from '../components/Icon.astro';
+import JournalCard from '../components/JournalCard.astro';
+import Photo from '../components/Photo.astro';
+import ScamWarning from '../components/ScamWarning.astro';
+import { images } from '../data/images';
+import { getJournalPosts } from '../data/journal';
+import { site } from '../data/site';
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const { contact } = site;
+
+const steps = [
+  { title: 'ลูกสุนัข', desc: 'เรียนรู้การเข้าสังคมและฝึกพื้นฐาน' },
+  {
+    title: 'ช่วงเติบโต',
+    desc: 'ดูแลโภชนาการ ออกกำลังกาย และฝึกต่อเนื่องกับครูฝึกโรงเรียนหมาสนุก',
+  },
+  { title: 'ก่อนเป็นแม่', desc: 'ตรวจสุขภาพตามมาตรฐาน และคัดเลือกพ่อพันธุ์ที่เหมาะสม' },
+  { title: 'ครอกแรก', desc: '[ปีโดยประมาณ หรือ เมื่อเฮลก้าพร้อมเต็มที่]' },
+].map((step, i) => ({
+  ...step,
+  num: i + 1,
+  state: i + 1 === site.currentStep ? 'current' : i + 1 < site.currentStep ? 'done' : 'todo',
+}));
+
+const promises = [
+  {
+    icon: 'lineage',
+    title: 'สายเลือดชัดเจน',
+    text: 'ลูกสุนัขทุกตัวจะมีใบเพ็ดดีกรีจดทะเบียนกับสมาคมพัฒนาพันธุ์สุนัขแห่งประเทศไทย ระบุสายเลือดพ่อแม่ชัดเจน',
+  },
+  {
+    icon: 'heartPlus',
+    title: 'สุขภาพมาก่อน',
+    text: 'ได้รับวัคซีน 2 เข็ม และตรวจสุขภาพโดยรวมจากสัตวแพทย์ก่อนส่งมอบทุกตัว',
+  },
+  {
+    icon: 'homeCheck',
+    title: 'พร้อมก่อนย้ายบ้าน',
+    text: 'ผ่านการฝึกพื้นฐานและการปูนิสัยตั้งแต่เล็ก ภายใต้การดูแลของครูฝึกจากโรงเรียนหมาสนุก',
+  },
+] as const;
+
+const helgaPhotos = [
+  images.biblackPupGrass,
+  images.biblackPupTile,
+  images.biblackAdultAutumn,
+  images.biblackAdultStand,
+  images.homeBiblack,
+  images.biblackPupTile,
+];
+
+const posts = (await getJournalPosts()).slice(0, 3);
+---
+
+<BaseLayout
+  current="home"
+  description="จุดเริ่มต้นของฟาร์มเชลตี้ที่ตั้งใจทำอย่างถูกต้องตั้งแต่วันแรก ติดตามการเติบโตของเฮลก้า และลงชื่อรอครอกแรกของเราได้แล้ววันนี้"
+>
+  <!-- Hero -->
+  <section class="wrap split hero">
+    <div class="stack" style="--gap:20px">
+      <span class="status">
+        <Icon name="clock" size={16} />
+        ตอนนี้เฮลก้ายังเป็นลูกสุนัข ครอกแรกยังไม่เปิดจอง
+      </span>
+      <h1>{site.name}<br /><span>{site.breed}</span></h1>
+      <p class="head-font hero-th">{site.nameTh}</p>
+      <p class="hero-lead">
+        จุดเริ่มต้นของฟาร์มเชลตี้ที่ตั้งใจทำอย่างถูกต้องตั้งแต่วันแรก ติดตามการเติบโตของเฮลก้า
+        และลงชื่อรอครอกแรกของเราได้แล้ววันนี้
+      </p>
+      <div class="hero-actions">
+        <a href="/puppies/" class="btn">ลงชื่อรอครอกแรก <Icon name="arrowRight" size={18} /></a>
+        <a href="/puppies/partners/" class="btn btn--outline">ดูลูกเชลตี้จากฟาร์มพันธมิตร</a>
+      </div>
+    </div>
+    <div class="hero-photo">
+      <Photo
+        src={images.biblackPupGrass}
+        alt="ภาพเฮลก้า"
+        temp
+        ratio="4 / 5"
+        radius={28}
+        loading="eager"
+      />
+      <div class="hero-tag">
+        <span class="head-font">เฮลก้า (Helga)</span>
+        <span>ผู้ก่อตั้งบ้านของเรา</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Trust strip -->
+  <section class="trust" aria-label="จุดเด่นของเรา">
+    <div class="wrap trust-grid">
+      <div><Icon name="document" size={26} sw={1.8} />ใบเพ็ดดีกรีสมาคมพัฒนาพันธุ์สุนัขแห่งประเทศไทย</div>
+      <div><Icon name="homeDoor" size={26} sw={1.8} />เลี้ยงในบ้านระบบปิด เหมือนสมาชิกในครอบครัว</div>
+      <div><Icon name="person" size={26} sw={1.8} />ฝึกโดยครูฝึกจากโรงเรียนหมาสนุก</div>
+    </div>
+  </section>
+
+  <!-- Entry cards -->
+  <section class="wrap entries">
+    <a href="/sheltie/" class="card entry">
+      <Photo
+        src={images.triAdult}
+        alt="เชลตี้สีไตรคัลเลอร์ยืนบนสนามหญ้า (ภาพประกอบ)"
+        ratio="1 / 1"
+        position="38% 50%"
+        sizes="(max-width: 700px) 100vw, 300px"
+      />
+      <div class="entry-label">
+        <span class="head-font">รู้จักเชลตี้</span><span class="arrow" aria-hidden="true">→</span>
+      </div>
+    </a>
+    <a href="/our-dogs/" class="card entry">
+      <Photo
+        src={images.biblackPupTile}
+        alt="ภาพเฮลก้า"
+        temp
+        ratio="1 / 1"
+        sizes="(max-width: 700px) 100vw, 300px"
+      />
+      <div class="entry-label">
+        <span class="head-font">พบกับเฮลก้า</span><span class="arrow" aria-hidden="true">→</span>
+      </div>
+    </a>
+    <a href="/puppies/program/" class="card entry">
+      <Photo
+        src={images.biblackPupGrass}
+        alt="ลูกเชลตี้ไบแบล็กนั่งบนสนามหญ้า (ภาพประกอบ)"
+        ratio="1 / 1"
+        position="50% 45%"
+        sizes="(max-width: 700px) 100vw, 300px"
+      />
+      <div class="entry-label">
+        <span class="head-font">โปรแกรมเตรียมความพร้อม</span><span class="arrow" aria-hidden="true"
+          >→</span
+        >
+      </div>
+    </a>
+    <a href="/puppies/" class="entry entry--cta">
+      <Icon name="signup" size={40} sw={1.6} />
+      <div class="stack" style="--gap:6px">
+        <span class="head-font">ลงชื่อรอครอกแรก</span>
+        <span class="entry-sub">ติดต่อกลับเป็นกลุ่มแรกเมื่อมีข่าว</span>
+      </div>
+    </a>
+  </section>
+
+  <!-- About -->
+  <section class="wrap split about">
+    <div class="about-photos">
+      <Photo src={images.homeBiblack} alt="ภาพเฮลก้าในบ้าน" temp ratio="1 / 1" radius={20} />
+      <Photo
+        src={images.biblackAdultStand}
+        alt="ภาพเฮลก้ากับครอบครัว"
+        temp
+        ratio="1 / 1"
+        radius={20}
+        style="margin-top:36px"
+      />
+    </div>
+    <div class="stack" style="--gap:18px">
+      <span class="eyebrow">เกี่ยวกับเรา</span>
+      <h2 class="home-title">เริ่มต้นจากเชลตี้ตัวเล็กๆ ชื่อเฮลก้า</h2>
+      <p class="body-text">
+        {site.name} เริ่มต้นจากเชลตี้ตัวเล็กๆ ชื่อเฮลก้า ผู้ก่อตั้งบ้านของเรา
+      </p>
+      <p class="body-text">
+        เราไม่รีบ เพราะเชื่อว่าลูกสุนัขที่ดีเริ่มจากพ่อแม่ที่แข็งแรงและนิสัยดี
+        ตอนนี้เฮลก้ายังเป็นลูกสุนัข เราจึงใช้เวลานี้เลี้ยงดูเธอให้เติบโตอย่างสมบูรณ์ ทั้งร่างกาย นิสัย
+        และการเข้าสังคม ก่อนจะถึงวันที่เธอพร้อมเป็นแม่
+      </p>
+      <p class="body-text">
+        น้องหมาของเราเลี้ยงในบ้านระบบปิด ดูแลความสะอาดตลอด 24 ชั่วโมง
+        และได้รับความรักความอบอุ่นอย่างใกล้ชิด เพราะเราเชื่อว่าสุนัขที่โตมากับความใส่ใจ
+        จะเติบโตเป็นสุนัขที่มั่นใจและเป็นมิตร
+      </p>
+    </div>
+  </section>
+
+  <!-- Promises -->
+  <section class="band-sand">
+    <div class="wrap stack block" style="--gap:36px">
+      <div class="stack center" style="--gap:10px">
+        <span class="eyebrow">คำมั่นสัญญาของเรา</span>
+        <h2 class="home-title">ลูกสุนัขทุกตัวจาก {site.name}</h2>
+      </div>
+      <div class="grid-260">
+        {
+          promises.map((promise) => (
+            <article class="promise">
+              <div class="promise-icon">
+                <Icon name={promise.icon} size={26} sw={1.8} />
+              </div>
+              <h3>{promise.title}</h3>
+              <p>{promise.text}</p>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- Timeline -->
+  <section class="wrap stack block" style="--gap:36px">
+    <div class="stack" style="--gap:10px">
+      <span class="eyebrow">เส้นทางของเฮลก้า</span>
+      <h2 class="home-title">จากลูกสุนัข สู่วันที่พร้อมเป็นแม่</h2>
+    </div>
+    <ol class="steps">
+      {
+        steps.map((step) => (
+          <li class:list={['card', 'step', `step--${step.state}`]}>
+            <div class="step-top">
+              <span class="step-num head-font">{step.num}</span>
+              {step.state === 'current' && <span class="step-now">ตอนนี้</span>}
+              {step.state === 'done' && <span class="step-done">ผ่านแล้ว</span>}
+            </div>
+            <h3>{step.title}</h3>
+            <p>{step.desc}</p>
+          </li>
+        ))
+      }
+    </ol>
+  </section>
+
+  <!-- Photo grid -->
+  <section class="wrap photo-grid" aria-label="ภาพเฮลก้า">
+    {
+      helgaPhotos.map((photo, i) => (
+        <Photo
+          src={photo}
+          alt={`ภาพเฮลก้า ${i + 1}`}
+          temp
+          ratio="1 / 1"
+          radius={18}
+          widths={[480]}
+          sizes="(max-width: 700px) 50vw, 200px"
+        />
+      ))
+    }
+  </section>
+
+  <!-- Journal -->
+  <section class="band-white">
+    <div class="wrap stack block" style="--gap:32px">
+      <div class="journal-head">
+        <div class="stack" style="--gap:10px">
+          <span class="eyebrow">บันทึกเฮลก้า</span>
+          <h2 class="home-title">อัปเดตการเติบโตรายเดือน</h2>
+        </div>
+        <a href="/journal/" class="text-link">ดูบันทึกทั้งหมด →</a>
+      </div>
+      <div class="grid-260" style="gap:24px">
+        {posts.map((post) => <JournalCard post={post} heading="h3" radius={18} />)}
+      </div>
+    </div>
+  </section>
+
+  <!-- Knowledge -->
+  <section class="wrap stack block" style="--gap:32px">
+    <div class="stack" style="--gap:10px">
+      <span class="eyebrow">ความรู้เรื่องเชลตี้</span>
+      <h2 class="home-title">เชลตี้เหมาะกับครอบครัวคุณไหม</h2>
+    </div>
+    <div class="grid-260">
+      <a href="/sheltie/" class="card topic">
+        <Icon name="info" size={30} sw={1.8} color="var(--slate)" />
+        <h3>รู้จักเชลตี้</h3>
+        <p>ต้นกำเนิด นิสัย ขนาด และเหมาะกับใคร</p>
+      </a>
+      <a href="/sheltie/health/" class="card topic">
+        <Icon name="heart" size={30} sw={1.8} color="var(--slate)" />
+        <h3>สุขภาพเชลตี้</h3>
+        <p>โรคทางพันธุกรรมที่ควรรู้ เช่น MDR1, CEA, PRA</p>
+      </a>
+      <a href="/sheltie/colors/" class="card topic">
+        <div class="swatches" aria-hidden="true">
+          <span style="background:#B9874D"></span>
+          <span style="background:linear-gradient(90deg,#1F1F1F 60%,#A86A2E 60%)"></span>
+          <span style="background:#1F1F1F;box-shadow:inset -5px 0 0 #FFFFFF"></span>
+        </div>
+        <h3>สีเชลตี้</h3>
+        <p>เซเบิล ไตรคัลเลอร์ ไบแบล็ก และสีอื่นๆ</p>
+      </a>
+    </div>
+  </section>
+
+  <!-- Reviews: hidden until there are real ones (site.showReviews) -->
+  {
+    site.showReviews && (
+      <section class="wrap stack reviews" style="--gap:24px">
+        <h2>จากครอบครัวที่รับน้องไป</h2>
+        <div class="grid-260">
+          <figure class="card review">
+            <blockquote>[ข้อความรีวิวจริงจากลูกค้า]</blockquote>
+            <figcaption>[ชื่อครอบครัว / ชื่อน้อง]</figcaption>
+          </figure>
+        </div>
+      </section>
+    )
+  }
+
+  <!-- Scam warning -->
+  <section class="wrap scam">
+    <ScamWarning>
+      เราติดต่อผ่านช่องทางในเว็บนี้เท่านั้น LINE: {contact.line} / Facebook: {contact.facebook} / โทร:
+      {contact.phone} และรับเงินผ่านบัญชีชื่อ {contact.bankAccountName} เท่านั้น หากไม่แน่ใจ ทักถามเราก่อนโอนทุกครั้ง
+    </ScamWarning>
+  </section>
+
+  <!-- CTA band -->
+  <section class="cta">
+    <div class="wrap split block" style="gap:32px">
+      <div class="stack" style="--gap:14px">
+        <h2 class="home-title">อยากรู้ข่าวครอกแรกก่อนใคร</h2>
+        <p>ลงชื่อไว้ เราจะติดต่อกลับเป็นกลุ่มแรกเมื่อมีข่าว หรือทักมาคุยเรื่องเชลตี้ได้ทุกเรื่อง</p>
+      </div>
+      <div class="cta-actions">
+        <a href="/puppies/" class="btn btn--cream">ลงชื่อรอครอกแรก</a>
+        <a href={contact.lineUrl} class="btn btn--line">ทัก LINE: {contact.line}</a>
+        <a href={contact.phoneUrl} class="btn btn--ghost">โทร {contact.phone}</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .block {
+    padding-block: 72px;
+  }
+  .center {
+    align-items: center;
+    text-align: center;
+  }
+  .home-title {
+    font-size: clamp(28px, 3.4vw, 40px);
+    line-height: 1.25;
+  }
+  .grid-260 {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 20px;
+  }
+
+  /* Hero */
+  .hero {
+    padding-block: 56px 40px;
+    gap: 48px;
+  }
+  .status {
+    align-self: flex-start;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--sand-warm);
+    color: var(--amber-ink);
+    font-size: 14px;
+    font-weight: 500;
+    padding: 6px 14px;
+    border-radius: 999px;
+  }
+  h1 {
+    font-size: clamp(36px, 5vw, 60px);
+    line-height: 1.1;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+  h1 span {
+    color: var(--brown);
+  }
+  .hero-th {
+    font-size: 22px;
+    font-weight: 500;
+    color: var(--muted);
+  }
+  .hero-lead {
+    font-size: 18px;
+    line-height: 1.75;
+    color: var(--ink-soft);
+    max-width: 520px;
+  }
+  .hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 8px;
+  }
+  .hero-photo {
+    position: relative;
+  }
+  .hero-tag {
+    position: absolute;
+    left: -12px;
+    bottom: 28px;
+    background: var(--surface);
+    border-radius: 18px;
+    padding: 14px 18px;
+    box-shadow: 0 10px 30px rgba(38, 30, 24, 0.12);
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    font-size: 13px;
+    color: var(--muted);
+  }
+  .hero-tag .head-font {
+    font-weight: 600;
+    font-size: 16px;
+    color: var(--ink);
+  }
+
+  /* Trust strip */
+  .trust {
+    background: var(--brown);
+    color: #fff;
+  }
+  .trust-grid {
+    padding-block: 22px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 16px;
+  }
+  .trust-grid div {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 15px;
+    line-height: 1.5;
+  }
+  .trust-grid :global(svg) {
+    color: var(--cream);
+  }
+
+  /* Entry cards */
+  .entries {
+    padding-block: 56px 24px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 20px;
+  }
+  .entry {
+    text-decoration: none;
+    color: var(--ink);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+  .entry-label {
+    padding: 18px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+  }
+  .entry-label .head-font {
+    font-weight: 600;
+    font-size: 18px;
+  }
+  .arrow {
+    color: var(--amber);
+    font-size: 20px;
+  }
+  .entry--cta {
+    color: #fff;
+    background: var(--amber);
+    border-radius: 22px;
+    justify-content: space-between;
+    padding: 24px;
+    min-height: 268px;
+  }
+  .entry--cta .head-font {
+    font-weight: 600;
+    font-size: 22px;
+  }
+  .entry-sub {
+    font-size: 14px;
+    line-height: 1.6;
+    color: #fbebd6;
+  }
+
+  /* About */
+  .about {
+    padding-block: 56px;
+    gap: 48px;
+  }
+  .about-photos {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+  }
+
+  /* Promises */
+  .promise {
+    background: var(--surface);
+    border-radius: 22px;
+    padding: 30px 26px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .promise-icon {
+    width: 52px;
+    height: 52px;
+    border-radius: 16px;
+    background: var(--sand-warm);
+    color: var(--amber);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .promise h3 {
+    font-size: 22px;
+  }
+  .promise p {
+    font-size: 16px;
+    line-height: 1.75;
+    color: var(--ink-soft);
+  }
+
+  /* Timeline */
+  .steps {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 16px;
+  }
+  .step {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 24px;
+  }
+  .step--current {
+    border: 2px solid var(--amber);
+    box-shadow: 0 10px 30px rgba(160, 98, 31, 0.12);
+  }
+  .step-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+  }
+  .step-num {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 17px;
+    background: var(--sand);
+    color: var(--brown);
+  }
+  .step--current .step-num {
+    background: var(--amber);
+    color: #fff;
+  }
+  .step--done .step-num {
+    background: var(--brown);
+    color: #fff;
+  }
+  .step-now {
+    background: var(--amber);
+    color: #fff;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 4px 12px;
+    border-radius: 999px;
+  }
+  .step-done {
+    color: var(--brown);
+    font-size: 13px;
+    font-weight: 600;
+  }
+  .step h3 {
+    font-size: 20px;
+  }
+  .step p {
+    font-size: 15px;
+    line-height: 1.7;
+    color: var(--ink-soft);
+  }
+
+  /* Photo grid */
+  .photo-grid {
+    padding-bottom: 72px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 12px;
+  }
+
+  /* Journal */
+  .journal-head {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 16px;
+  }
+
+  /* Knowledge */
+  .topic {
+    text-decoration: none;
+    color: var(--ink);
+    padding: 26px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .topic h3 {
+    font-size: 20px;
+  }
+  .topic p {
+    font-size: 15px;
+    line-height: 1.7;
+    color: var(--muted);
+  }
+  .swatches {
+    display: flex;
+    gap: 4px;
+  }
+  .swatches span {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+  }
+
+  /* Reviews */
+  .reviews {
+    padding-bottom: 72px;
+  }
+  .reviews h2 {
+    font-size: 32px;
+  }
+  .review {
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .review blockquote {
+    font-size: 16px;
+    line-height: 1.75;
+  }
+  .review figcaption {
+    font-size: 14px;
+    color: var(--muted);
+  }
+
+  .scam {
+    padding-bottom: 56px;
+  }
+
+  /* CTA band */
+  .cta {
+    background: var(--ink);
+    color: #fff;
+  }
+  .cta p {
+    font-size: 17px;
+    line-height: 1.8;
+    color: var(--on-dark);
+  }
+  .cta-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+</style>

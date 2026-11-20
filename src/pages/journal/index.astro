@@ -1,0 +1,53 @@
+---
+import FilterChips from '../../components/FilterChips.astro';
+import JournalCard from '../../components/JournalCard.astro';
+import { journalCategories } from '../../content.config';
+import { getJournalPosts } from '../../data/journal';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const posts = await getJournalPosts();
+const filters = [
+  { value: 'all', label: 'ทั้งหมด' },
+  ...journalCategories.map((category) => ({ value: category, label: category })),
+];
+---
+
+<BaseLayout
+  title="บันทึกเฮลก้า"
+  current="journal"
+  description="บันทึกการเติบโตของเฮลก้ารายเดือน ตั้งแต่ลูกสุนัขจนถึงวันเป็นแม่"
+>
+  <section class="wrap stack hero">
+    <nav class="breadcrumb" aria-label="breadcrumb"><a href="/">หน้าแรก</a> / บันทึกเฮลก้า</nav>
+    <h1 class="page-title">บันทึกเฮลก้า</h1>
+    <p class="lead" style="max-width:680px">
+      บันทึกการเติบโตของเฮลก้ารายเดือน ตั้งแต่ลูกสุนัขจนถึงวันเป็นแม่
+    </p>
+  </section>
+
+  <section class="wrap stack posts" style="--gap:28px">
+    <FilterChips group="journal" label="กรองตามหมวด" options={filters} />
+    <div class="post-grid" data-filter-list="journal">
+      {posts.map((post) => <JournalCard post={post} excerpt />)}
+    </div>
+    <p class="empty" data-filter-empty="journal" hidden>ยังไม่มีบันทึกในหมวดนี้</p>
+  </section>
+</BaseLayout>
+
+<style>
+  .hero {
+    padding-block: 48px 24px;
+  }
+  .posts {
+    padding-block: 8px 72px;
+  }
+  .post-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 28px 24px;
+  }
+  .empty {
+    font-size: 16px;
+    color: var(--muted);
+  }
+</style>

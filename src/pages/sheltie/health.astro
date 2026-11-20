@@ -1,0 +1,232 @@
+---
+import Photo from '../../components/Photo.astro';
+import { images } from '../../data/images';
+import { site } from '../../data/site';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const conditions = [
+  {
+    title: 'ภาวะแพ้ยาบางชนิด (MDR1)',
+    body: 'ความผิดปกติของยีน MDR1 ทำให้เกิดพิษต่อระบบประสาทเมื่อได้รับยาบางชนิด เช่น ไอเวอร์เมกติน และยาแก้ท้องเสียหรือยาปฏิชีวนะบางตัว ควรแจ้งสัตวแพทย์ทุกครั้งว่าเป็นเชลตี้',
+  },
+  {
+    title: 'Collie Eye Anomaly (CEA)',
+    body: 'ความผิดปกติของตาที่ถ่ายทอดทางพันธุกรรม โครงสร้างบางส่วนของตาไม่พัฒนาตามปกติตั้งแต่เกิด',
+  },
+  {
+    title: 'จอประสาทตาเสื่อม (PRA)',
+    body: 'จอประสาทตาเสื่อมลงเรื่อยๆ ทำให้การมองเห็นลดลงจนอาจตาบอดสนิท',
+  },
+  {
+    title: 'Dermatomyositis',
+    body: 'โรคภูมิคุ้มกันทำร้ายตัวเองที่ถ่ายทอดทางพันธุกรรม บางครั้งเรียกว่า sheltie skin syndrome',
+  },
+  { title: 'ข้อสะโพกเสื่อม (Hip Dysplasia)', body: 'ไม่ใช่สายพันธุ์ที่พบบ่อยที่สุด แต่ก็พบได้' },
+  {
+    title: 'อื่นๆ',
+    body: 'มีรายงานหูหนวกแต่กำเนิด ข้อศอกเคลื่อนแต่กำเนิด ไทรอยด์ต่ำ และโรคหัวใจแต่กำเนิด (PDA)',
+  },
+];
+---
+
+<BaseLayout
+  title="สุขภาพเชลตี้"
+  current="sheltie"
+  description="โรคทางพันธุกรรมของเชลตี้ที่ควรรู้ เช่น MDR1, CEA, PRA และสิ่งที่ผู้เพาะพันธุ์ที่ดีควรคัดกรอง"
+>
+  <!-- Hero -->
+  <section class="wrap split hero">
+    <div class="stack">
+      <nav class="breadcrumb" aria-label="breadcrumb">
+        <a href="/">หน้าแรก</a> / <a href="/sheltie/">รู้จักเชลตี้</a> / สุขภาพเชลตี้
+      </nav>
+      <h1 class="page-title">สุขภาพเชลตี้</h1>
+      <p class="lead">
+        เชลตี้เป็นสุนัขแข็งแรง คล่องแคล่ว และฉลาด แต่มีปัญหาสุขภาพบางอย่างที่มีสาเหตุจากพันธุกรรม
+        ผู้เพาะพันธุ์ที่ดีจึงควรรู้และคัดพ่อแม่พันธุ์อย่างระมัดระวัง
+      </p>
+    </div>
+    <Photo
+      src={images.healthVetTri}
+      alt="สัตวแพทย์ตรวจตาเชลตี้สีไตรคัลเลอร์บนโต๊ะตรวจ (ภาพประกอบ)"
+      illustration
+      ratio="4 / 3"
+      radius={28}
+      position="62% 50%"
+      loading="eager"
+    />
+  </section>
+
+  <!-- Accordion: one item open at a time -->
+  <section class="wrap stack conditions" style="--wrap:860px;--gap:20px">
+    <h2>โรคทางพันธุกรรมที่ควรรู้</h2>
+    <div class="stack" style="--gap:12px" data-accordion>
+      {
+        conditions.map((condition, i) => (
+          <div class="item">
+            <h3>
+              <button
+                type="button"
+                id={`condition-${i}`}
+                aria-expanded={i === 0 ? 'true' : 'false'}
+                aria-controls={`condition-${i}-body`}
+              >
+                <span class="item-title">
+                  <span class="item-num">{i + 1}</span>
+                  {condition.title}
+                </span>
+                <span class="item-mark" aria-hidden="true">
+                  +
+                </span>
+              </button>
+            </h3>
+            <p
+              id={`condition-${i}-body`}
+              role="region"
+              aria-labelledby={`condition-${i}`}
+              hidden={i !== 0}
+            >
+              {condition.body}
+            </p>
+          </div>
+        ))
+      }
+    </div>
+  </section>
+
+  <!-- What we do -->
+  <section class="wrap" style="--wrap:860px">
+    <div class="ours stack" style="--gap:12px">
+      <h2>สิ่งที่ {site.name} ทำเพื่อสุขภาพลูกสุนัข</h2>
+      <p class="todo">[รอเจ้าของใส่สิ่งที่ทำจริง เช่น ตรวจตา ตรวจยีน]</p>
+    </div>
+  </section>
+
+  <!-- Disclaimer -->
+  <section class="wrap disclaimer" style="--wrap:860px">
+    <p role="note">
+      ข้อมูลนี้เพื่อความรู้ทั่วไป ไม่ใช่คำวินิจฉัยทางการแพทย์ ปรึกษาสัตวแพทย์เสมอ
+    </p>
+  </section>
+</BaseLayout>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-accordion]').forEach((accordion) => {
+    const buttons = accordion.querySelectorAll<HTMLButtonElement>('button[aria-controls]');
+    const setOpen = (button: HTMLButtonElement, open: boolean) => {
+      button.setAttribute('aria-expanded', String(open));
+      const panel = document.getElementById(button.getAttribute('aria-controls') ?? '');
+      if (panel) panel.hidden = !open;
+    };
+    buttons.forEach((button) => {
+      button.addEventListener('click', () => {
+        const wasOpen = button.getAttribute('aria-expanded') === 'true';
+        buttons.forEach((b) => setOpen(b, false));
+        setOpen(button, !wasOpen);
+      });
+    });
+  });
+</script>
+
+<style>
+  .hero {
+    padding-block: 48px 40px;
+  }
+
+  .conditions {
+    padding-block: 24px 56px;
+  }
+  .conditions h2 {
+    font-size: clamp(26px, 3.2vw, 34px);
+  }
+  .item {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    overflow: hidden;
+  }
+  .item h3 {
+    font-size: 18px;
+  }
+  .item button {
+    width: 100%;
+    min-height: 60px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    padding: 16px 20px;
+    background: transparent;
+    border: 0;
+    cursor: pointer;
+    font: inherit;
+    font-family: var(--font-head);
+    font-weight: 600;
+    font-size: 18px;
+    color: var(--ink);
+    text-align: left;
+  }
+  .item-title {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .item-num {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--sand);
+    color: var(--brown);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    flex-shrink: 0;
+  }
+  .item-mark {
+    font-size: 26px;
+    line-height: 1;
+    color: var(--amber);
+    transition: transform 0.2s;
+  }
+  .item button[aria-expanded='true'] .item-mark {
+    transform: rotate(45deg);
+  }
+  .item p {
+    padding: 0 20px 20px 66px;
+    font-size: 16px;
+    line-height: 1.8;
+    color: var(--ink-soft);
+  }
+
+  .ours {
+    background: var(--sand);
+    border-radius: 24px;
+    padding: 28px;
+    margin-bottom: 48px;
+  }
+  .ours h2 {
+    font-size: 24px;
+  }
+  .ours p {
+    font-size: 16px;
+    line-height: 1.8;
+  }
+
+  .disclaimer {
+    padding-bottom: 72px;
+  }
+  .disclaimer p {
+    font-size: 14px;
+    line-height: 1.7;
+    color: var(--muted);
+    border-top: 1px solid var(--line);
+    padding-top: 16px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .item-mark {
+      transition: none;
+    }
+  }
+</style>

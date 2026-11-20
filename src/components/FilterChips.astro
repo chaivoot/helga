@@ -1,0 +1,60 @@
+---
+/**
+ * A row of toggle chips that filters the items inside the element marked
+ * `data-filter-list={group}`: each item carries `data-filter-value`.
+ * An optional `data-filter-empty={group}` element shows when nothing matches.
+ */
+interface Props {
+  group: string;
+  label: string;
+  options: { value: string; label: string }[];
+  /** Option value that shows everything. */
+  all?: string;
+}
+
+const { group, label, options, all = 'all' } = Astro.props;
+---
+
+<div class="chips" role="group" aria-label={label} data-filter-chips={group} data-filter-all={all}>
+  {
+    options.map((option) => (
+      <button
+        type="button"
+        class="chip"
+        aria-pressed={option.value === all ? 'true' : 'false'}
+        data-value={option.value}
+      >
+        {option.label}
+      </button>
+    ))
+  }
+</div>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-filter-chips]').forEach((chips) => {
+    const group = chips.dataset.filterChips;
+    const all = chips.dataset.filterAll;
+    const list = document.querySelector<HTMLElement>(`[data-filter-list="${group}"]`);
+    const empty = document.querySelector<HTMLElement>(`[data-filter-empty="${group}"]`);
+    const buttons = chips.querySelectorAll<HTMLButtonElement>('button');
+    if (!list) return;
+
+    const apply = (value: string | undefined) => {
+      let shown = 0;
+      list.querySelectorAll<HTMLElement>('[data-filter-value]').forEach((item) => {
+        const match = value === all || item.dataset.filterValue === value;
+        item.hidden = !match;
+        if (match) shown += 1;
+      });
+      list.hidden = shown === 0;
+      if (empty) empty.hidden = shown > 0;
+    };
+
+    buttons.forEach((button) => {
+      button.addEventListener('click', () => {
+        buttons.forEach((b) => b.setAttribute('aria-pressed', String(b === button)));
+        apply(button.dataset.value);
+      });
+    });
+  });
+</script>

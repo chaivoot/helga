@@ -1,0 +1,293 @@
+---
+import CtaBanner from '../../components/CtaBanner.astro';
+import Photo from '../../components/Photo.astro';
+import { images } from '../../data/images';
+import { site } from '../../data/site';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const mainColors = [
+  {
+    name: 'เซเบิล',
+    english: 'Sable',
+    photo: images.sableAdult,
+    alt: 'เชลตี้สีเซเบิลนอนบนสนามหญ้า (ภาพประกอบ)',
+    position: '60% 50%',
+    swatch: 'background:#B9874D;box-shadow:inset -6px 0 0 #FFFFFF',
+    text: '[คำอธิบายสีเซเบิล - เนื้อหารอเขียนเพิ่ม]',
+  },
+  {
+    name: 'ไตรคัลเลอร์',
+    english: 'Tricolor',
+    photo: images.triAdult,
+    alt: 'เชลตี้สีไตรคัลเลอร์ยืนข้างลำธาร (ภาพประกอบ)',
+    position: '50% 45%',
+    swatch: 'background:linear-gradient(90deg,#1F1F1F 60%,#A86A2E 60%)',
+    text: '[คำอธิบายสีไตรคัลเลอร์ - เนื้อหารอเขียนเพิ่ม]',
+  },
+  {
+    name: 'ไบแบล็ก',
+    english: 'Bi-Black',
+    photo: images.biblackAdultStand,
+    alt: 'เชลตี้สีไบแบล็กยืนด้านข้างบนสนามหญ้า (ภาพประกอบ)',
+    position: '45% 45%',
+    swatch: 'background:#1F1F1F;box-shadow:inset -6px 0 0 #FFFFFF',
+    text: '[คำอธิบายสีไบแบล็ก - เนื้อหารอเขียนเพิ่ม]',
+  },
+];
+
+const puppyColors = [
+  {
+    photo: images.sablePupTile,
+    alt: 'ลูกเชลตี้สีเซเบิลนั่งมองกล้อง (ภาพประกอบ)',
+    position: '50% 30%',
+    caption: 'ลูกเชลตี้เซเบิล',
+  },
+  {
+    photo: images.triPupPatio,
+    alt: 'ลูกเชลตี้สีไตรคัลเลอร์นั่งมองกล้อง (ภาพประกอบ)',
+    position: '50% 45%',
+    caption: 'ลูกเชลตี้ไตร',
+  },
+  {
+    photo: images.biblackPupTile,
+    alt: 'ลูกเชลตี้สีไบแบล็กนั่งมองกล้อง (ภาพประกอบ)',
+    position: '50% 30%',
+    caption: 'ลูกเชลตี้ไบแบล็ก',
+  },
+];
+---
+
+<BaseLayout
+  title="สีเชลตี้"
+  current="sheltie"
+  description="สีของเชลตี้: เซเบิล ไตรคัลเลอร์ ไบแบล็ก บลูเมิร์ล และสีอื่นๆ พร้อมภาพประกอบตอนเป็นลูกสุนัขและตอนโต"
+>
+  <!-- Page hero -->
+  <section class="wrap stack hero">
+    <nav class="breadcrumb" aria-label="breadcrumb">
+      <a href="/">หน้าแรก</a> / <a href="/sheltie/">รู้จักเชลตี้</a> / สีเชลตี้
+    </nav>
+    <h1 class="page-title">สีเชลตี้</h1>
+    <p class="lead" style="max-width:720px">[คำนำหน้าสีเชลตี้ - เนื้อหารอเขียนเพิ่ม]</p>
+    <p class="hero-note">ภาพในหน้านี้เป็นภาพประกอบ ไม่ใช่สุนัขของ {site.name}</p>
+  </section>
+
+  <!-- Main colours -->
+  <section class="wrap main">
+    <div class="color-grid">
+      {
+        mainColors.map((color) => (
+          <article class="card color">
+            <Photo
+              src={color.photo}
+              alt={color.alt}
+              illustration
+              ratio="4 / 3"
+              position={color.position}
+              style="--badge-inset:12px"
+              sizes="(max-width: 700px) 100vw, 400px"
+            />
+            <div class="color-body stack" style="--gap:10px">
+              <div class="color-name">
+                <span class="swatch" style={color.swatch} aria-hidden="true" />
+                <h2>{color.name}</h2>
+                <span>{color.english}</span>
+              </div>
+              <p>{color.text}</p>
+            </div>
+          </article>
+        ))
+      }
+    </div>
+  </section>
+
+  <!-- Puppy colours -->
+  <section class="band-sand">
+    <div class="wrap pups">
+      <div class="stack" style="--gap:14px">
+        <span class="eyebrow">ตอนเป็นลูกสุนัข</span>
+        <h2 class="section-title" style="line-height:1.3">สีตอนเด็กกับตอนโต</h2>
+        <p class="pups-text">
+          [คำอธิบายการเปลี่ยนสีขนจากลูกสุนัขถึงตัวโต - เนื้อหารอเขียนเพิ่ม]
+        </p>
+      </div>
+      <div class="pups-photos">
+        {
+          puppyColors.map((pup) => (
+            <figure class="stack" style="--gap:10px">
+              <Photo
+                src={pup.photo}
+                alt={pup.alt}
+                ratio="3 / 4"
+                radius={20}
+                position={pup.position}
+                widths={[480]}
+                sizes="(max-width: 700px) 33vw, 200px"
+              />
+              <figcaption>{pup.caption}</figcaption>
+            </figure>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- Other colours -->
+  <section class="wrap stack others" style="--gap:24px">
+    <h2>สีอื่นๆ</h2>
+    <div class="other-grid">
+      <article class="card other">
+        <Photo
+          class="other-photo"
+          src={images.bluemerleStand}
+          alt="เชลตี้สีบลูเมิร์ล (ภาพประกอบ)"
+          position="30% 40%"
+          widths={[200]}
+          sizes="96px"
+        />
+        <div class="stack" style="--gap:6px">
+          <h3>บลูเมิร์ล <span>Blue Merle</span></h3>
+          <p>[คำอธิบาย - รอเขียนเพิ่ม]</p>
+        </div>
+      </article>
+      <article class="card other">
+        <Photo
+          class="other-photo"
+          src={images.bluemerleSit}
+          alt="ภาพเชลตี้สีอื่นๆ"
+          temp
+          compact
+          widths={[200]}
+          sizes="96px"
+        />
+        <div class="stack" style="--gap:6px">
+          <h3>อื่นๆ</h3>
+          <p>[คำอธิบาย - รอเขียนเพิ่ม]</p>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="wrap cta">
+    <CtaBanner
+      href="/puppies/"
+      title="ชอบสีไหน บอกเราไว้ได้"
+      text="เลือกสีที่สนใจตอนลงชื่อรอครอกแรก"
+      action="ลงชื่อรอครอกแรก"
+    />
+  </section>
+</BaseLayout>
+
+<style>
+  .hero {
+    padding-block: 56px 32px;
+  }
+  .hero-note {
+    font-size: 14px;
+    color: var(--muted);
+  }
+
+  .main {
+    padding-block: 16px 64px;
+  }
+  .color-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 24px;
+  }
+  .color {
+    border-radius: 24px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+  .color-body {
+    padding: 24px;
+  }
+  .color-name {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 15px;
+    color: var(--muted);
+  }
+  .color-name h2 {
+    font-size: 26px;
+    color: var(--ink);
+  }
+  .swatch {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    border: 1px solid var(--line);
+  }
+  .color-body p {
+    font-size: 16px;
+    line-height: 1.75;
+    color: var(--ink-soft);
+  }
+
+  .pups {
+    padding-block: 64px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 40px;
+    align-items: center;
+  }
+  .pups-text {
+    font-size: 16px;
+    line-height: 1.8;
+    color: var(--ink-soft);
+  }
+  .pups-photos {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+  }
+  figcaption {
+    font-size: 15px;
+    font-weight: 600;
+  }
+
+  .others {
+    padding-block: 64px;
+  }
+  .others h2 {
+    font-size: 28px;
+  }
+  .other-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 20px;
+  }
+  .other {
+    border-radius: 20px;
+    padding: 20px;
+    display: flex;
+    gap: 16px;
+    align-items: center;
+  }
+  .other :global(.other-photo) {
+    width: 96px;
+    height: 96px;
+    border-radius: 16px;
+    flex-shrink: 0;
+  }
+  .other h3 {
+    font-size: 20px;
+  }
+  .other h3 span {
+    font-size: 14px;
+    color: var(--muted);
+    font-weight: 400;
+  }
+  .other p {
+    font-size: 15px;
+    color: var(--muted);
+  }
+
+  .cta {
+    padding-bottom: 72px;
+  }
+</style>

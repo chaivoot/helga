@@ -1,0 +1,185 @@
+---
+import Icon from '../components/Icon.astro';
+import ScamWarning from '../components/ScamWarning.astro';
+import { site } from '../data/site';
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const { contact } = site;
+
+const topics = [
+  'สนใจลูกสุนัขครอกแรก',
+  'สนใจลูกสุนัขจากฟาร์มพันธมิตร',
+  'สอบถามเรื่องการเลี้ยงเชลตี้',
+  'อื่นๆ',
+];
+---
+
+<BaseLayout
+  title="ติดต่อเรา"
+  current="contact"
+  description={`ติดต่อ ${site.name} ทาง LINE, Facebook หรือโทร สนใจลูกสุนัข หรืออยากรู้จักเชลตี้มากขึ้น ทักมาคุยกันได้เลย`}
+>
+  <section class="wrap stack hero">
+    <nav class="breadcrumb" aria-label="breadcrumb"><a href="/">หน้าแรก</a> / ติดต่อเรา</nav>
+    <h1 class="page-title">ติดต่อเรา</h1>
+    <p class="lead" style="max-width:680px">
+      สนใจลูกสุนัข หรืออยากรู้จักเชลตี้มากขึ้น ทักมาคุยกันได้เลย ยินดีให้ข้อมูลทุกเรื่อง
+    </p>
+  </section>
+
+  <section class="wrap columns">
+    <!-- Channels -->
+    <div class="channels stack" style="--gap:14px">
+      <a href={contact.lineUrl} class="line-card stack" style="--gap:14px">
+        <div class="line-head">
+          <Icon name="chat" size={34} />
+          <strong class="head-font">ทัก LINE</strong>
+        </div>
+        <span class="line-id">LINE: {contact.line}</span>
+        <span class="line-action">เปิดแชท LINE →</span>
+      </a>
+      <a href={contact.facebookUrl} class="channel">
+        <Icon name="facebook" color="var(--brown)" />
+        <span><strong>Facebook</strong><span>{contact.facebook}</span></span>
+      </a>
+      <a href={contact.phoneUrl} class="channel">
+        <Icon name="phone" color="var(--brown)" />
+        <span><strong>โทร</strong><span>{contact.phone}</span></span>
+      </a>
+      <div class="channel">
+        <Icon name="pin" color="var(--brown)" />
+        <span><strong>พื้นที่</strong><span>[จังหวัด/เขต ถ้าต้องการแสดง]</span></span>
+      </div>
+    </div>
+
+    <!-- Form -->
+    <div class="form-card" data-form-wrap>
+      <form class="form" style="gap:18px" data-form="contact">
+        <h2>ส่งข้อความถึงเรา</h2>
+        <div class="form-row" style="grid-template-columns:repeat(auto-fit,minmax(200px,1fr))">
+          <label class="field"
+            >ชื่อ
+            <input type="text" name="name" required autocomplete="name" />
+          </label>
+          <label class="field"
+            >เบอร์โทร หรือ LINE ID
+            <input type="text" name="contact" />
+          </label>
+        </div>
+        <label class="field"
+          >เรื่องที่ติดต่อ
+          <select name="topic">
+            {topics.map((topic) => <option>{topic}</option>)}
+          </select>
+        </label>
+        <label class="field"
+          >ข้อความ
+          <textarea name="message" rows="5"></textarea>
+        </label>
+        <button type="submit" class="btn form-submit">ส่งข้อความ</button>
+        <p class="form-error" data-form-error role="alert" hidden>
+          ส่งไม่สำเร็จ กรุณาลองอีกครั้ง หรือทัก LINE มาได้เลย
+        </p>
+        <p class="form-fineprint">[ข้อความนโยบายการใช้ข้อมูลส่วนบุคคล - รอเจ้าของยืนยัน]</p>
+      </form>
+      <div class="form-done stack" style="--gap:10px" role="status" tabindex="-1" data-form-done hidden>
+        <strong class="form-done-title">ได้รับข้อความแล้ว ขอบคุณที่ติดต่อมา</strong>
+        <p>เราจะติดต่อกลับโดยเร็ว ถ้าเร่งด่วน ทัก LINE ได้เลย</p>
+        <button type="button" class="form-reset" data-form-reset>ส่งข้อความใหม่</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap scam">
+    <ScamWarning>
+      เราติดต่อผ่านช่องทางในหน้านี้เท่านั้น และรับเงินผ่านบัญชีชื่อ {contact.bankAccountName} เท่านั้น
+      หากไม่แน่ใจ ทักถามเราก่อนโอนทุกครั้ง
+    </ScamWarning>
+  </section>
+</BaseLayout>
+
+<script>
+  import '../scripts/forms';
+</script>
+
+<style>
+  .hero {
+    padding-block: 48px 24px;
+  }
+  .columns {
+    padding-block: 16px 48px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 32px;
+    align-items: flex-start;
+  }
+  .channels {
+    flex: 1 1 340px;
+    min-width: 0;
+  }
+  .line-card {
+    text-decoration: none;
+    background: var(--line-green);
+    color: var(--line-ink);
+    border-radius: 24px;
+    padding: 26px;
+  }
+  .line-head {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .line-head strong {
+    font-size: 24px;
+  }
+  .line-id {
+    font-size: 17px;
+  }
+  .line-action {
+    align-self: flex-start;
+    background: var(--line-ink);
+    color: #fff;
+    font-weight: 600;
+    font-size: 16px;
+    padding: 12px 22px;
+    border-radius: 999px;
+  }
+  .channel {
+    text-decoration: none;
+    color: var(--ink);
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 20px;
+    padding: 18px 20px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .channel > span {
+    display: flex;
+    flex-direction: column;
+  }
+  .channel strong {
+    font-size: 16px;
+  }
+  .channel span span {
+    font-size: 15px;
+    color: var(--muted);
+  }
+
+  .form-card {
+    flex: 999 1 480px;
+    min-width: 0;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 24px;
+    padding: 28px;
+  }
+  .form-card h2 {
+    font-size: 24px;
+  }
+
+  .scam {
+    padding-bottom: 72px;
+  }
+</style>

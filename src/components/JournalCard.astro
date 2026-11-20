@@ -1,0 +1,63 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { ageLabel, dateLabel } from '../data/journal';
+import Photo from './Photo.astro';
+
+interface Props {
+  post: CollectionEntry<'journal'>;
+  /** Heading level for the title. */
+  heading?: 'h2' | 'h3';
+  excerpt?: boolean;
+  radius?: number;
+}
+
+const { post, heading: Heading = 'h2', excerpt = false, radius = 20 } = Astro.props;
+const { data } = post;
+---
+
+<a href={`/journal/${post.id}/`} class="post" data-filter-value={data.category}>
+  <Photo
+    src={data.cover}
+    alt="ภาพหลักของโพสต์"
+    temp={data.tempPhotos}
+    ratio="4 / 3"
+    radius={radius}
+    sizes="(max-width: 700px) 100vw, 400px"
+  >
+    <span class="pill pill--over">{ageLabel(data.ageMonths, false)}</span>
+  </Photo>
+  <div class="meta">
+    <span class="pill pill--tag">{data.category}</span>
+    <span class="date">{dateLabel(data.date)}</span>
+  </div>
+  <Heading class="title">{data.title}</Heading>
+  {excerpt && <p class="excerpt">{data.excerpt}</p>}
+</a>
+
+<style>
+  .post {
+    text-decoration: none;
+    color: var(--ink);
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .meta {
+    display: flex;
+    gap: 8px;
+    font-size: 13px;
+    color: var(--muted);
+  }
+  .date {
+    padding: 3px 0;
+  }
+  .title {
+    font-size: 20px;
+    line-height: 1.4;
+  }
+  .excerpt {
+    font-size: 15px;
+    line-height: 1.7;
+    color: var(--muted);
+  }
+</style>

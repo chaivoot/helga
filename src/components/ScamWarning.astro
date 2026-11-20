@@ -1,0 +1,38 @@
+---
+import { site } from '../data/site';
+import Icon from './Icon.astro';
+---
+
+<div class="warn" role="note">
+  <Icon name="warning" size={28} color="var(--amber-note)" />
+  <div class="body">
+    <strong class="head-font">ระวังมิจฉาชีพแอบอ้างชื่อ {site.name}</strong>
+    <p><slot /></p>
+  </div>
+</div>
+
+<style>
+  .warn {
+    border: 1.5px solid #e3b98a;
+    background: #fdf5eb;
+    border-radius: 20px;
+    padding: 22px 24px;
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+  }
+  .body {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  strong {
+    font-size: 17px;
+    color: #6e3f0c;
+  }
+  p {
+    font-size: 15px;
+    line-height: 1.7;
+    color: var(--warm-ink);
+  }
+</style>
