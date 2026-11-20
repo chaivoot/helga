@@ -242,3 +242,39 @@
   text-decoration: underline;
   cursor: pointer;
 }
+
+/* Repeatable lists in the page editor */
+.admin-listfield {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.admin-listitems {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.admin-listitem {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 16px;
+}
+.admin-listitem .field :is(input, textarea) {
+  background: var(--surface);
+}
+.admin-listitem .admin-delete {
+  align-self: flex-start;
+  padding: 4px 0;
+  font-size: 14px;
+}
+/* Keeps the save button reachable on long pages. */
+.admin-savebar {
+  position: sticky;
+  bottom: 0;
+  padding-block: 12px;
+  background: linear-gradient(transparent, var(--bg) 30%);
+}

@@ -2,9 +2,12 @@
 import FilterChips from '../../components/FilterChips.astro';
 import JournalCard from '../../components/JournalCard.astro';
 import { journalCategories } from '../../data/options';
+import content from '../../content/pages/journal.json';
 import { getJournalPosts } from '../../data/journal';
+import { page, rich } from '../../data/pages';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 
+const p = page(content);
 const posts = await getJournalPosts();
 const filters = [
   { value: 'all', label: 'ทั้งหมด' },
@@ -13,16 +16,14 @@ const filters = [
 ---
 
 <BaseLayout
-  title="บันทึกเฮลก้า"
+  title={p.title}
   current="journal"
-  description="บันทึกการเติบโตของเฮลก้ารายเดือน ตั้งแต่ลูกสุนัขจนถึงวันเป็นแม่"
+  description={p.lead}
 >
   <section class="wrap stack hero">
     <nav class="breadcrumb" aria-label="breadcrumb"><a href="/">หน้าแรก</a> / บันทึกเฮลก้า</nav>
-    <h1 class="page-title">บันทึกเฮลก้า</h1>
-    <p class="lead" style="max-width:680px">
-      บันทึกการเติบโตของเฮลก้ารายเดือน ตั้งแต่ลูกสุนัขจนถึงวันเป็นแม่
-    </p>
+    <h1 class="page-title">{p.title}</h1>
+    <p class="lead" style="max-width:680px" set:html={rich(p.lead)} />
   </section>
 
   <section class="wrap stack posts" style="--gap:28px">

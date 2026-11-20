@@ -1,24 +1,10 @@
 ---
 import Photo from '../../components/Photo.astro';
-import { images } from '../../data/images';
+import content from '../../content/pages/sheltie.json';
+import { page, paragraphs, photo, rich } from '../../data/pages';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 
-const facts = [
-  { label: 'ความสูง', value: '13-16 นิ้ว (33-41 ซม.)' },
-  { label: 'น้ำหนัก', value: '7-11 กก.' },
-  { label: 'อายุขัยเฉลี่ย', value: '12-14 ปี' },
-  { label: 'ขน', value: 'ขนสองชั้นหนาแน่น มีแผงขนรอบคอ หางเป็นพู่' },
-  { label: 'สีมาตรฐาน AKC', value: 'ดำ บลูเมิร์ล เซเบิล (มักมีสีขาวหรือน้ำตาลแต้ม)' },
-];
-
-const goodToKnow = [
-  {
-    title: 'ระวังคนแปลกหน้า',
-    text: 'เป็นธรรมชาติของสุนัขต้อนสัตว์ ควรพาเข้าสังคมตั้งแต่เล็ก',
-  },
-  { title: 'ชอบเห่า', text: 'ควรฝึกตั้งแต่เด็ก' },
-  { title: 'ต้องการกิจกรรม', text: 'ต้องได้ออกกำลังกายและเล่นเกมใช้สมองทุกวัน' },
-];
+const p = page(content);
 
 const more = [
   { href: '/sheltie/health/', title: 'สุขภาพเชลตี้', text: 'โรคทางพันธุกรรมที่ควรรู้' },
@@ -27,20 +13,19 @@ const more = [
 ---
 
 <BaseLayout
-  title="รู้จักเชลตี้ (Shetland Sheepdog)"
+  title={`${p.title} (Shetland Sheepdog)`}
   current="sheltie"
-  description="รู้จักเชลตี้ (Shetland Sheepdog): ต้นกำเนิด นิสัย ขนาด และเชลตี้เหมาะกับครอบครัวแบบไหน"
+  description={`${p.title} (Shetland Sheepdog): ${p.lead}`}
 >
   <!-- Hero -->
   <section class="wrap split hero">
     <div class="stack">
       <nav class="breadcrumb" aria-label="breadcrumb"><a href="/">หน้าแรก</a> / รู้จักเชลตี้</nav>
-      <h1 class="page-title">รู้จักเชลตี้<br /><span>Shetland Sheepdog</span></h1>
-      <p class="lead">ต้นกำเนิด นิสัย ขนาด และเชลตี้เหมาะกับครอบครัวแบบไหน</p>
+      <h1 class="page-title">{p.title}<br /><span>Shetland Sheepdog</span></h1>
+      <p class="lead" set:html={rich(p.lead)} />
     </div>
     <Photo
-      src={images.biblackAdultAutumn}
-      alt="เชลตี้สีไบแบล็กยืนบนสนามหญ้ายามเย็น (ภาพประกอบ)"
+      {...photo(p.heroImage)}
       illustration
       ratio="4 / 3"
       radius={28}
@@ -51,25 +36,14 @@ const more = [
   <!-- Origin + quick facts -->
   <section class="wrap origin">
     <div class="origin-text stack">
-      <h2 class="section-title">ต้นกำเนิด</h2>
-      <p class="body-text">
-        เชลตี้มาจากหมู่เกาะเช็ตแลนด์ ประเทศสกอตแลนด์ ในช่วงศตวรรษที่ 1800
-        เป็นหมู่เกาะทางเหนือสุดของสหราชอาณาจักรที่อากาศหนาวและลมแรง เชลตี้เป็นสายพันธุ์ตัวเล็กแต่ทนทาน
-        เช่นเดียวกับม้าแคระเช็ตแลนด์และแกะเช็ตแลนด์ ที่ถูกพัฒนาให้อยู่รอดในสภาพแห้งแล้งของเกาะบ้านเกิด
-      </p>
-      <p class="body-text">
-        แม้หน้าตาคล้ายคอลลี่ย่อส่วน แต่เชลตี้เป็นสายพันธุ์แยกต่างหาก ช่วงต้นศตวรรษที่ 20 James Loggie
-        นำรัฟคอลลี่ตัวเล็กเข้ามาผสมในสายเลือด ช่วยวางรากฐานให้เกิดเชลตี้แบบปัจจุบัน Kennel Club
-        ของอังกฤษรับรองสายพันธุ์ในปี 1909 ภายใต้ชื่อ Shetland Collie
-        ก่อนเปลี่ยนชื่อเพราะผู้เลี้ยงคอลลี่คัดค้าน และ AKC ของอเมริกาจดทะเบียนในชื่อ Shetland Sheepdog
-        ในปี 1911
-      </p>
+      <h2 class="section-title">{p.originTitle}</h2>
+      {paragraphs(p.originBody).map((text) => <p class="body-text" set:html={rich(text)} />)}
     </div>
     <aside class="facts stack" aria-label="ข้อมูลโดยย่อ">
-      <h2>ข้อมูลโดยย่อ</h2>
+      <h2>{p.factsTitle}</h2>
       <dl>
         {
-          facts.map((fact) => (
+          p.facts.map((fact) => (
             <div>
               <dt>{fact.label}</dt>
               <dd>{fact.value}</dd>
@@ -85,34 +59,18 @@ const more = [
   <section class="band-white">
     <div class="wrap stack block" style="--gap:28px">
       <div class="stack intro" style="--gap:14px">
-        <h2 class="section-title">ถูกสร้างมาเพื่ออะไร</h2>
-        <p class="body-text">
-          เชลตี้เป็นสุนัขทำงานในฟาร์ม ใช้ต้อนแกะ สัตว์ปีก และม้าแคระ จึงอยู่ในกลุ่มสุนัขต้อนสัตว์
-          (Herding) สัญชาตญาณนี้ยังติดตัวมาถึงทุกวันนี้ ทำให้เชลตี้เก่งกีฬาสุนัข ทั้งการต้อนสัตว์
-          อจิลิตี้ การฝึกเชื่อฟัง แรลลี่ และการตามกลิ่น
-        </p>
+        <h2 class="section-title">{p.builtTitle}</h2>
+        {paragraphs(p.builtBody).map((text) => <p class="body-text" set:html={rich(text)} />)}
       </div>
       <div class="jobs">
-        <figure class="stack" style="--gap:10px">
-          <Photo
-            src={images.herdingSable}
-            alt="เชลตี้สีเซเบิลกำลังต้อนแกะในทุ่งหญ้า (ภาพประกอบ)"
-            ratio="16 / 10"
-            radius={22}
-            position="60% 50%"
-          />
-          <figcaption>การต้อนสัตว์</figcaption>
-        </figure>
-        <figure class="stack" style="--gap:10px">
-          <Photo
-            src={images.agilityTri}
-            alt="เชลตี้สีไตรคัลเลอร์กระโดดข้ามรั้วอจิลิตี้ (ภาพประกอบ)"
-            ratio="16 / 10"
-            radius={22}
-            position="50% 50%"
-          />
-          <figcaption>อจิลิตี้</figcaption>
-        </figure>
+        {
+          p.jobs.map((job) => (
+            <figure class="stack" style="--gap:10px">
+              <Photo {...photo(job.image)} ratio="16 / 10" radius={22} />
+              <figcaption>{job.caption}</figcaption>
+            </figure>
+          ))
+        }
       </div>
     </div>
   </section>
@@ -120,18 +78,16 @@ const more = [
   <!-- Temperament -->
   <section class="wrap stack block" style="--gap:28px">
     <div class="stack intro" style="--gap:14px">
-      <h2 class="section-title">นิสัย</h2>
-      <p class="body-text">
-        ซื่อสัตย์ อ่อนโยน ฉลาด เข้าใจคนได้ดี ขี้เล่นและชอบเอาใจเจ้าของ เป็นสุนัขในบ้านที่ดีมาก
-      </p>
+      <h2 class="section-title">{p.temperTitle}</h2>
+      {paragraphs(p.temperBody).map((text) => <p class="body-text" set:html={rich(text)} />)}
     </div>
-    <h3 class="know-title">สิ่งที่ว่าที่เจ้าของควรรู้</h3>
+    <h3 class="know-title">{p.knowTitle}</h3>
     <div class="know-grid">
       {
-        goodToKnow.map((item) => (
+        p.know.map((item) => (
           <article class="card know">
             <strong class="head-font">{item.title}</strong>
-            <p>{item.text}</p>
+            <p set:html={rich(item.text)} />
           </article>
         ))
       }
@@ -142,30 +98,23 @@ const more = [
   <section class="band-sand">
     <div class="wrap split block">
       <div class="stack" style="--gap:14px">
-        <h2 class="section-title">เหมาะกับใคร</h2>
-        <p class="body-text">
-          ครอบครัวที่มีเวลาให้ ชอบทำกิจกรรมกับสุนัข และพร้อมดูแลขนสม่ำเสมอ เชลตี้ตัวไม่ใหญ่
-          เลี้ยงในบ้านได้ดี แต่ไม่เหมาะกับบ้านที่ปล่อยสุนัขอยู่ลำพังทั้งวัน
-        </p>
+        <h2 class="section-title">{p.suitsTitle}</h2>
+        {paragraphs(p.suitsBody).map((text) => <p class="body-text" set:html={rich(text)} />)}
         <a href="/puppies/" class="btn btn--md" style="align-self:flex-start;margin-top:6px"
           >ลงชื่อรอครอกแรก</a
         >
       </div>
       <div class="suits-photos">
         <Photo
-          src={images.homeBiblack}
-          alt="เชลตี้สีไบแบล็กนอนพักในห้องนั่งเล่น มีคนลูบหัว (ภาพประกอบ)"
+          {...photo(p.suitsImage1)}
           ratio="1 / 1"
           radius={20}
-          position="55% 60%"
           sizes="(max-width: 700px) 50vw, 300px"
         />
         <Photo
-          src={images.groomSable}
-          alt="หวีขนแผงคอของเชลตี้สีเซเบิล (ภาพประกอบ)"
+          {...photo(p.suitsImage2)}
           ratio="1 / 1"
           radius={20}
-          position="55% 50%"
           sizes="(max-width: 700px) 50vw, 300px"
           style="margin-top:32px"
         />

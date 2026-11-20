@@ -1,30 +1,25 @@
 ---
 import Icon from '../components/Icon.astro';
 import ScamWarning from '../components/ScamWarning.astro';
+import content from '../content/pages/contact.json';
+import { page, rich } from '../data/pages';
 import { site } from '../data/site';
 import BaseLayout from '../layouts/BaseLayout.astro';
 
 const { contact } = site;
 
-const topics = [
-  'สนใจลูกสุนัขครอกแรก',
-  'สนใจลูกสุนัขจากฟาร์มพันธมิตร',
-  'สอบถามเรื่องการเลี้ยงเชลตี้',
-  'อื่นๆ',
-];
+const p = page(content);
 ---
 
 <BaseLayout
-  title="ติดต่อเรา"
+  title={p.title}
   current="contact"
-  description={`ติดต่อ ${site.name} ทาง LINE, Facebook หรือโทร สนใจลูกสุนัข หรืออยากรู้จักเชลตี้มากขึ้น ทักมาคุยกันได้เลย`}
+  description={`ติดต่อ ${site.name} ทาง LINE, Facebook หรือโทร ${p.lead}`}
 >
   <section class="wrap stack hero">
     <nav class="breadcrumb" aria-label="breadcrumb"><a href="/">หน้าแรก</a> / ติดต่อเรา</nav>
-    <h1 class="page-title">ติดต่อเรา</h1>
-    <p class="lead" style="max-width:680px">
-      สนใจลูกสุนัข หรืออยากรู้จักเชลตี้มากขึ้น ทักมาคุยกันได้เลย ยินดีให้ข้อมูลทุกเรื่อง
-    </p>
+    <h1 class="page-title">{p.title}</h1>
+    <p class="lead" style="max-width:680px" set:html={rich(p.lead)} />
   </section>
 
   <section class="wrap columns">
@@ -55,7 +50,7 @@ const topics = [
     <!-- Form -->
     <div class="form-card" data-form-wrap>
       <form class="form" style="gap:18px" data-form="contact">
-        <h2>ส่งข้อความถึงเรา</h2>
+        <h2>{p.formTitle}</h2>
         <div class="form-row" style="grid-template-columns:repeat(auto-fit,minmax(200px,1fr))">
           <label class="field"
             >ชื่อ
@@ -69,7 +64,7 @@ const topics = [
         <label class="field"
           >เรื่องที่ติดต่อ
           <select name="topic">
-            {topics.map((topic) => <option>{topic}</option>)}
+            {p.topics.map((topic) => <option>{topic.text}</option>)}
           </select>
         </label>
         <label class="field"
@@ -80,11 +75,11 @@ const topics = [
         <p class="form-error" data-form-error role="alert" hidden>
           ส่งไม่สำเร็จ กรุณาลองอีกครั้ง หรือทัก LINE มาได้เลย
         </p>
-        <p class="form-fineprint">[ข้อความนโยบายการใช้ข้อมูลส่วนบุคคล - รอเจ้าของยืนยัน]</p>
+        <p class="form-fineprint">{p.privacyNote}</p>
       </form>
       <div class="form-done stack" style="--gap:10px" role="status" tabindex="-1" data-form-done hidden>
-        <strong class="form-done-title">ได้รับข้อความแล้ว ขอบคุณที่ติดต่อมา</strong>
-        <p>เราจะติดต่อกลับโดยเร็ว ถ้าเร่งด่วน ทัก LINE ได้เลย</p>
+        <strong class="form-done-title">{p.thanksTitle}</strong>
+        <p set:html={rich(p.thanksText)} />
         <button type="button" class="form-reset" data-form-reset>ส่งข้อความใหม่</button>
       </div>
     </div>

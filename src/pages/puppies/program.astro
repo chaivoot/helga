@@ -2,53 +2,20 @@
 import CtaBanner from '../../components/CtaBanner.astro';
 import Icon from '../../components/Icon.astro';
 import Photo from '../../components/Photo.astro';
-import { images } from '../../data/images';
+import content from '../../content/pages/program.json';
+import { page, photo, rich } from '../../data/pages';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 
-const lessons = [
-  {
-    icon: 'brain',
-    title: 'Early Neurological Stimulation (ENS)',
-    text: 'กระตุ้นระบบประสาทอย่างอ่อนโยนในช่วงแรกเกิด เพื่อช่วยให้ลูกสุนัขรับมือกับความเครียดได้ดีขึ้นเมื่อโตขึ้น',
-  },
-  {
-    icon: 'crate',
-    title: 'การอยู่ในพื้นที่จำกัด',
-    text: 'ให้คุ้นเคยกับคอกหรือกรง ช่วยให้การเดินทางและการไปหาหมอง่ายขึ้น',
-  },
-  {
-    icon: 'homeMoon',
-    title: 'การอยู่ลำพัง',
-    text: 'ค่อยๆ ฝึกให้อยู่คนเดียวได้อย่างสบายใจ ลดความกังวลเมื่อเจ้าของไม่อยู่บ้าน',
-  },
-  {
-    icon: 'pad',
-    title: 'การขับถ่าย',
-    text: 'เริ่มปูพื้นฐานการขับถ่ายเป็นที่ ให้เจ้าของใหม่ฝึกต่อได้ง่าย',
-  },
-  {
-    icon: 'ball',
-    title: 'การเล่น',
-    text: 'เรียนรู้การเล่นกับพี่น้องและคนอย่างเหมาะสม เป็นพื้นฐานของการเข้าสังคม',
-  },
-  {
-    icon: 'bowl',
-    title: 'การทานอาหารเม็ด',
-    text: 'หย่านมและปรับมาทานอาหารเม็ดเรียบร้อยก่อนย้ายบ้าน',
-  },
-  {
-    icon: 'clipboard',
-    title: 'การทดสอบระบบประสาทและนิสัย',
-    text: 'ประเมินนิสัยของลูกสุนัขแต่ละตัว เพื่อแนะนำได้ว่าตัวไหนเหมาะกับครอบครัวแบบไหน',
-    todo: '[รอยืนยันความหมาย]',
-  },
-] as const;
+const p = page(content);
+
+// Icons are matched to lessons by position.
+const icons = ['brain', 'crate', 'homeMoon', 'pad', 'ball', 'bowl', 'clipboard'] as const;
 ---
 
 <BaseLayout
-  title="โปรแกรมเตรียมความพร้อมก่อนส่งมอบ"
+  title={p.title}
   current="puppies"
-  description="7 เรื่องที่ลูกสุนัขทุกตัวจะได้เรียนรู้ก่อนย้ายบ้าน ภายใต้การดูแลของครูฝึกจากโรงเรียนหมาสนุก"
+  description={p.lead}
 >
   <!-- Hero -->
   <section class="band-sand">
@@ -57,19 +24,14 @@ const lessons = [
         <nav class="breadcrumb" aria-label="breadcrumb">
           <a href="/">หน้าแรก</a> / <a href="/puppies/">ลูกสุนัข</a> / โปรแกรมเตรียมความพร้อม
         </nav>
-        <h1>โปรแกรมเตรียมความพร้อมก่อนส่งมอบ</h1>
-        <p class="lead">
-          ช่วงสัปดาห์แรกๆ ของชีวิตสำคัญมากต่อนิสัยของสุนัขในระยะยาว เราจึงวางโปรแกรมให้ลูกสุนัขทุกตัว
-          ภายใต้การดูแลของครูฝึกจากโรงเรียนหมาสนุก
-        </p>
+        <h1>{p.title}</h1>
+        <p class="lead" set:html={rich(p.lead)} />
       </div>
       <Photo
-        src={images.biblackPupGrass}
-        alt="ลูกเชลตี้ไบแบล็กนั่งบนสนามหญ้า (ภาพประกอบ)"
+        {...photo(p.heroImage)}
         illustration
         ratio="4 / 3"
         radius={28}
-        position="50% 42%"
         loading="eager"
       />
     </div>
@@ -77,22 +39,19 @@ const lessons = [
 
   <!-- 7 lessons -->
   <section class="wrap stack lessons" style="--gap:28px">
-    <h2 class="section-title">7 เรื่องที่ลูกสุนัขทุกตัวจะได้เรียนรู้</h2>
+    <h2 class="section-title">{p.lessonsTitle}</h2>
     <div class="lesson-grid">
       {
-        lessons.map((lesson, i) => (
+        p.lessons.map((lesson, i) => (
           <article class="card lesson">
             <div class="lesson-top">
               <div class="lesson-icon">
-                <Icon name={lesson.icon} size={28} sw={1.7} />
+                <Icon name={icons[i] ?? 'checkCircle'} size={28} sw={1.7} />
               </div>
               <span class="lesson-num head-font">{String(i + 1).padStart(2, '0')}</span>
             </div>
             <h3>{lesson.title}</h3>
-            <p>
-              {lesson.text}
-              {'todo' in lesson && <span class="todo"> {lesson.todo}</span>}
-            </p>
+            <p set:html={rich(lesson.text)} />
           </article>
         ))
       }
@@ -103,8 +62,8 @@ const lessons = [
   <section class="wrap cta">
     <CtaBanner
       href="/puppies/"
-      title="ลูกสุนัขครอกแรกจะผ่านโปรแกรมนี้ทุกตัว"
-      text="ลงชื่อไว้ เราจะติดต่อกลับเป็นกลุ่มแรกเมื่อมีข่าว"
+      title={p.bannerTitle}
+      text={p.bannerText}
       action="ลงชื่อรอครอกแรก"
       tone="dark"
       actionTone="cream"

@@ -2,6 +2,8 @@
 import { render } from 'astro:content';
 import CtaBanner from '../../components/CtaBanner.astro';
 import Photo from '../../components/Photo.astro';
+import content from '../../content/pages/journal.json';
+import { page } from '../../data/pages';
 import { ageLabel, dateLabel, getJournalPosts, type JournalPost } from '../../data/journal';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 
@@ -23,12 +25,13 @@ interface Props {
 const { post, newer, older } = Astro.props;
 const { data } = post;
 const { Content } = await render(post);
+const p = page(content);
 ---
 
 <BaseLayout title={data.title} current="journal" description={data.excerpt}>
   <article class="wrap stack post" style="--wrap:800px;--gap:22px">
     <nav class="breadcrumb" aria-label="breadcrumb">
-      <a href="/">หน้าแรก</a> / <a href="/journal/">บันทึกเฮลก้า</a> / {data.title}
+      <a href="/">หน้าแรก</a> / <a href="/journal/">{p.title}</a> / {data.title}
     </nav>
     <div class="meta">
       <span class="meta-age">{ageLabel(data.ageMonths)}</span>
@@ -79,8 +82,8 @@ const { Content } = await render(post);
   <section class="wrap cta" style="--wrap:800px">
     <CtaBanner
       href="/puppies/"
-      title="อยากได้ลูกของเฮลก้า?"
-      text="ลงชื่อรอครอกแรกไว้ก่อนได้"
+      title={p.bannerTitle}
+      text={p.bannerText}
       action="ลงชื่อรอครอกแรก"
       size="sm"
     />

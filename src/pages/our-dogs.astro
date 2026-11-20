@@ -1,66 +1,48 @@
 ---
 import Icon from '../components/Icon.astro';
 import Photo from '../components/Photo.astro';
-import { images } from '../data/images';
+import content from '../content/pages/dogs.json';
+import { page, photo, rich } from '../data/pages';
 import { site } from '../data/site';
 import BaseLayout from '../layouts/BaseLayout.astro';
 
+const p = page(content);
+
 const facts = [
-  { label: 'เพศ', value: 'เมีย' },
-  { label: 'สี', value: 'ไบแบล็ก' },
+  { label: 'เพศ', value: p.helgaSex },
+  { label: 'สี', value: p.helgaColor },
   { label: 'วันเกิด', value: site.helga.born },
 ];
 
-const parents = [
-  {
-    role: 'พ่อ',
-    text: 'สีไตรคัลเลอร์ สายประกวด ใบเพ็ดดีกรีสมาคมพัฒนาพันธุ์สุนัขแห่งประเทศไทย',
-    swatches: ['#2B2B2B', '#B9874D', '#FFFFFF'],
-  },
-  {
-    role: 'แม่',
-    text: 'สีบลูเมิร์ล ใบเพ็ดดีกรีสมาคมพัฒนาพันธุ์สุนัขแห่งประเทศไทย',
-    swatches: ['#8E9AA6', '#2B2B2B', '#FFFFFF'],
-  },
-];
-
-const ages = [
-  { photo: images.biblackPupTile, alt: 'เฮลก้าอายุ 2 เดือน', caption: '2 เดือน' },
-  { photo: images.biblackPupGrass, alt: 'เฮลก้าอายุ 3 เดือน', caption: '3 เดือน' },
-  { photo: images.biblackPupTile, alt: 'เฮลก้า ช่วงอายุถัดไป', caption: '[ ] เดือน', pending: true },
-  {
-    photo: images.biblackAdultStand,
-    alt: 'เฮลก้า ช่วงอายุถัดไป',
-    caption: '[ ] เดือน',
-    pending: true,
-  },
+// Coat colour dots, matched to the lineage entries by position.
+const swatches = [
+  ['#2B2B2B', '#B9874D', '#FFFFFF'],
+  ['#8E9AA6', '#2B2B2B', '#FFFFFF'],
 ];
 ---
 
 <BaseLayout
-  title="พ่อแม่พันธุ์ของเรา"
+  title={p.title}
   current="dogs"
-  description={`ลูกสุนัขที่ดีเริ่มจากพ่อแม่ที่แข็งแรงและนิสัยดี พบกับเฮลก้า เชลตี้ตัวแรกและผู้ก่อตั้ง ${site.name}`}
+  description={p.lead}
 >
   <!-- Page hero -->
   <section class="wrap stack hero">
     <nav class="breadcrumb" aria-label="breadcrumb"><a href="/">หน้าแรก</a> / พ่อแม่พันธุ์</nav>
-    <h1 class="page-title">พ่อแม่พันธุ์ของเรา</h1>
-    <p class="lead" style="max-width:680px">
-      ลูกสุนัขที่ดีเริ่มจากพ่อแม่ที่แข็งแรงและนิสัยดี นี่คือสุนัขของ {site.name}
-    </p>
+    <h1 class="page-title">{p.title}</h1>
+    <p class="lead" style="max-width:680px" set:html={rich(p.lead)} />
   </section>
 
   <!-- Helga profile -->
   <section class="wrap helga">
     <article class="profile">
-      <Photo class="profile-photo" src={images.biblackPupGrass} alt="ภาพเฮลก้า" temp loading="eager">
+      <Photo class="profile-photo" {...photo(p.helgaImage)} loading="eager">
         <span class="pill pill--over pill--caps" style="background:var(--amber)">DAM</span>
       </Photo>
       <div class="profile-body stack" style="--gap:20px">
         <div class="stack" style="--gap:4px">
-          <h2>Helga <span>(เฮลก้า)</span></h2>
-          <span class="profile-sub">เชลตี้ตัวแรกและผู้ก่อตั้ง {site.name}</span>
+          <h2>{p.helgaName} <span>{p.helgaNameTh}</span></h2>
+          <span class="profile-sub">{p.helgaSub}</span>
         </div>
         <dl class="facts">
           {
@@ -80,11 +62,15 @@ const ages = [
           <h3>สายเลือด</h3>
           <div class="parents">
             {
-              parents.map((parent) => (
+              p.parents.map((parent, i) => (
                 <div class="parent">
-                  <div class="swatches" aria-hidden="true">
-                    {parent.swatches.map((color) => <span style={`background:${color}`} />)}
-                  </div>
+                  {swatches[i] && (
+                    <div class="swatches" aria-hidden="true">
+                      {swatches[i].map((color) => (
+                        <span style={`background:${color}`} />
+                      ))}
+                    </div>
+                  )}
                   <div class="parent-text">
                     <strong>{parent.role}</strong>
                     <span>{parent.text}</span>
@@ -104,21 +90,19 @@ const ages = [
   <!-- Gallery by age -->
   <section class="band-sand">
     <div class="wrap stack ages" style="--gap:28px">
-      <h2 class="section-title">เฮลก้าตามช่วงอายุ</h2>
+      <h2 class="section-title">{p.agesTitle}</h2>
       <div class="age-grid">
         {
-          ages.map((age) => (
+          p.ages.map((age) => (
             <figure class="stack" style="--gap:10px">
               <Photo
-                src={age.photo}
-                alt={age.alt}
-                temp
+                {...photo(age.image)}
                 ratio="1 / 1"
                 radius={18}
                 widths={[480]}
                 sizes="(max-width: 700px) 50vw, 280px"
               />
-              <figcaption class:list={{ pending: age.pending }}>{age.caption}</figcaption>
+              <figcaption class:list={{ pending: age.caption.startsWith('[') }}>{age.caption}</figcaption>
             </figure>
           ))
         }
@@ -128,7 +112,7 @@ const ages = [
 
   <!-- Sire: coming soon -->
   <section class="wrap stack sire" style="--gap:24px">
-    <h2 class="section-title">พ่อพันธุ์</h2>
+    <h2 class="section-title">{p.sireTitle}</h2>
     <article class="sire-card">
       <div class="sire-photo">
         <span class="pill pill--over pill--caps" style="background:var(--slate)">SIRE</span>
@@ -136,11 +120,8 @@ const ages = [
       </div>
       <div class="sire-body stack" style="--gap:14px">
         <span class="soon">Coming soon</span>
-        <h3>กำลังคัดเลือกพ่อพันธุ์ที่เหมาะสม</h3>
-        <p class="profile-text">
-          เราจะเลือกพ่อพันธุ์ที่มีใบเพ็ดดีกรี สุขภาพแข็งแรง และนิสัยดี ก่อนเฮลก้าจะพร้อมเป็นแม่
-          โปรไฟล์จะขึ้นที่นี่เมื่อเลือกได้แล้ว
-        </p>
+        <h3>{p.sireHeading}</h3>
+        <p class="profile-text" set:html={rich(p.sireText)} />
       </div>
     </article>
   </section>

@@ -5,15 +5,12 @@ import Icon from '../../components/Icon.astro';
 import Photo from '../../components/Photo.astro';
 import { getCollection } from 'astro:content';
 import { puppyStatuses, statusLabels } from '../../data/options';
+import content from '../../content/pages/partners.json';
+import { page, rich } from '../../data/pages';
 import { site } from '../../data/site';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 
-const standards = [
-  'ใบเพ็ดดีกรีจากสมาคม ระบุพ่อแม่ชัดเจน',
-  'วัคซีนและตรวจสุขภาพโดยสัตวแพทย์ มีเอกสาร',
-  'อายุส่งมอบไม่ต่ำกว่า [ ] สัปดาห์',
-  'เปิดให้ดูสถานที่เลี้ยงหรือวิดีโอคอลดูพ่อแม่ได้',
-];
+const p = page(content);
 
 const filters = [
   { value: 'all', label: 'ทั้งหมด' },
@@ -30,34 +27,31 @@ const hasPuppies = partnerPuppies.length > 0;
 <BaseLayout
   title="ลูกเชลตี้จากฟาร์มพันธมิตร"
   current="puppies"
-  description="ลูกเชลตี้จากฟาร์มพันธมิตรที่มีมาตรฐานเดียวกับเรา ทุกตัวมีใบเพ็ดดีกรี ผ่านการตรวจสุขภาพ และเราได้ดูพ่อแม่และสถานที่เลี้ยงด้วยตัวเอง"
+  description={p.lead}
 >
   <!-- Page hero -->
   <section class="wrap stack hero" style="--gap:18px">
     <nav class="breadcrumb" aria-label="breadcrumb">
       <a href="/">หน้าแรก</a> / <a href="/puppies/">ลูกสุนัข</a> / ฟาร์มพันธมิตร
     </nav>
-    <h1 class="page-title">ลูกเชลตี้จากฟาร์มพันธมิตร</h1>
-    <p class="lead" style="max-width:760px">
-      ระหว่างรอครอกแรกของเฮลก้า เราคัดเลือกลูกเชลตี้จากฟาร์มพันธมิตรที่มีมาตรฐานเดียวกับเรา
-      ทุกตัวมีใบเพ็ดดีกรี ผ่านการตรวจสุขภาพ และเราได้ดูพ่อแม่และสถานที่เลี้ยงด้วยตัวเอง
-    </p>
+    <h1 class="page-title">{p.title}</h1>
+    <p class="lead" style="max-width:760px" set:html={rich(p.lead)} />
     <div class="note-info" role="note" style="align-self:flex-start">
       <Icon name="info" size={20} />
-      ลูกสุนัขในหน้านี้เป็นของฟาร์มพันธมิตร ไม่ใช่ลูกของเฮลก้า ทุกการ์ดระบุชื่อฟาร์มที่เพาะไว้ชัดเจน
+      <span set:html={rich(p.note)} />
     </div>
   </section>
 
   <!-- Standards -->
   <section class="wrap standards">
     <div class="standards-box stack" style="--gap:18px">
-      <h2>มาตรฐานพันธมิตรของเรา</h2>
+      <h2>{p.standardsTitle}</h2>
       <ul class="standards-list">
         {
-          standards.map((standard) => (
+          p.standards.map((standard) => (
             <li>
               <Icon name="check" size={22} color="var(--brown)" />
-              {standard}
+              <span set:html={rich(standard.text)} />
             </li>
           ))
         }
@@ -68,7 +62,7 @@ const hasPuppies = partnerPuppies.length > 0;
   <!-- Listing -->
   <section class="wrap stack listing" style="--gap:24px">
     <div class="listing-head">
-      <h2>ลูกสุนัขตอนนี้</h2>
+      <h2>{p.listTitle}</h2>
       <FilterChips group="puppies" label="กรองตามสถานะ" options={filters} />
     </div>
 
@@ -127,8 +121,8 @@ const hasPuppies = partnerPuppies.length > 0;
 
     <div class="empty" data-filter-empty="puppies" hidden={hasPuppies}>
       <Icon name="paw" size={48} sw={1.6} color="var(--slate)" />
-      <strong class="head-font">ตอนนี้ยังไม่มีลูกสุนัขพร้อมส่งมอบ</strong>
-      <p>ทักมาฝากชื่อไว้ได้ เราจะแจ้งเมื่อมีลูกสุนัขจากฟาร์มพันธมิตร</p>
+      <strong class="head-font">{p.emptyTitle}</strong>
+      <p>{p.emptyText}</p>
       <a href={site.contact.lineUrl} class="btn btn--line empty-action">ฝากชื่อทาง LINE</a>
     </div>
   </section>
@@ -137,8 +131,8 @@ const hasPuppies = partnerPuppies.length > 0;
   <section class="wrap back">
     <CtaBanner
       href="/puppies/"
-      title="อยากรอลูกของเฮลก้า?"
-      text={`ลงชื่อรอครอกแรกของ ${site.name} ไว้ก่อนได้`}
+      title={p.bannerTitle}
+      text={p.bannerText}
       action="ลงชื่อรอครอกแรก"
       tone="white"
     />

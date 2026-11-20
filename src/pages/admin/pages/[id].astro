@@ -1,0 +1,83 @@
+---
+import Field from '../../../components/admin/Field.astro';
+import { getPageDef } from '../../../data/pageDefs';
+import AdminLayout from '../../../layouts/AdminLayout.astro';
+import { FormError, getPageContent, savePageContent } from '../../../lib/admin/content';
+
+export const prerender = false;
+
+const { id = '' } = Astro.params;
+const def = getPageDef(id);
+if (!def) return Astro.redirect('/admin/pages/');
+
+let error: string | undefined;
+if (Astro.request.method === 'POST') {
+  try {
+    await savePageContent(id, await Astro.request.formData());
+    return Astro.redirect(`/admin/pages/${id}/?saved`);
+  } catch (cause) {
+    if (!(cause instanceof FormError)) console.error(cause);
+    error = cause instanceof FormError ? cause.message : 'บันทึกไม่สำเร็จ กรุณาลองอีกครั้ง';
+  }
+}
+
+const content = await getPageContent(id);
+if (!content) return Astro.redirect('/admin/pages/');
+---
+
+<AdminLayout title={def.title} back={{ href: '/admin/pages/', label: 'หน้าทั้งหมด' }} error={error}>
+  <p class="admin-hint">
+    พิมพ์ <code>{'{name}'}</code> ในข้อความเพื่อแทรกชื่อแบรนด์
+    <a href={def.href} target="_blank">เปิดหน้านี้บนเว็บ</a>
+  </p>
+  <form method="post" enctype="multipart/form-data" class="form admin-form" data-saving>
+    {
+      def.sections.map((section) => (
+        <fieldset class="admin-card">
+          <legend>{section.title}</legend>
+          {section.fields.map((field) => {
+            if (field.type !== 'list') {
+              const value = content[field.name];
+              return <Field field={field} name={field.name} value={Array.isArray(value) ? undefined : value} />;
+            }
+            const stored = content[field.name];
+            const items = Array.isArray(stored) ? stored : [];
+            return (
+              <div class="admin-listfield" data-list>
+                <strong>{field.label}</strong>
+                <div class="admin-listitems" data-list-items>
+                  {items.map((item, i) => (
+                    <div class="admin-listitem" data-list-item>
+                      {field.fields.map((child) => (
+                        <Field field={child} name={`${field.name}.${i}.${child.name}`} value={item[child.name]} />
+                      ))}
+                      <button type="button" class="admin-delete" data-list-remove>
+                        ลบ{field.itemLabel}นี้
+                      </button>
+                    </div>
+                  ))}
+                </div>
+                <template>
+                  <div class="admin-listitem" data-list-item>
+                    {field.fields.map((child) => (
+                      <Field field={child} name={`${field.name}.__index__.${child.name}`} />
+                    ))}
+                    <button type="button" class="admin-delete" data-list-remove>
+                      ลบ{field.itemLabel}นี้
+                    </button>
+                  </div>
+                </template>
+                <button type="button" class="btn btn--outline btn--md" data-list-add style="align-self:flex-start">
+                  + เพิ่ม{field.itemLabel}
+                </button>
+              </div>
+            );
+          })}
+        </fieldset>
+      ))
+    }
+    <div class="admin-savebar">
+      <button type="submit" class="btn form-submit">บันทึกหน้านี้</button>
+    </div>
+  </form>
+</AdminLayout>

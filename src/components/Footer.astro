@@ -30,7 +30,7 @@ const { contact } = site;
       <span class="loose">
         ดูแลการฝึกและปูนิสัยโดยครูฝึกจาก<a
           href="https://dogsanook.com"
-          class="quiet"
+          class="quiet-link"
           target="_blank"
           rel="noopener">โรงเรียนหมาสนุก</a
         >
@@ -70,17 +70,11 @@ const { contact } = site;
     color: #cfc4b8;
     text-decoration: none;
   }
-  .col a:hover {
+  .col a:not(.quiet-link):hover {
     color: #fff;
   }
   .loose {
     line-height: 1.7;
-  }
-  /* A link that reads as plain text. */
-  .col a.quiet,
-  .col a.quiet:hover {
-    color: inherit;
-    cursor: text;
   }
   .brand {
     gap: 10px;

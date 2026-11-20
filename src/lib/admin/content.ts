@@ -9,12 +9,15 @@ import {
   type JournalCategory,
   type PuppyStatus,
 } from '../../data/options';
+import { getPageDef, type Field, type SimpleField } from '../../data/pageDefs';
+import type { PageImage } from '../../data/pages';
 import type { SiteSettings } from '../../data/site';
 import { decode, getStore, type Change } from './store';
 
 const JOURNAL_DIR = 'src/content/journal';
 const PUPPIES_DIR = 'src/content/puppies';
 const SETTINGS_FILE = 'src/content/settings/site.json';
+const PAGES_DIR = 'src/content/pages';
 const UPLOADS_DIR = 'src/assets/uploads';
 
 const MAX_UPLOAD_BYTES = 4 * 1024 * 1024;
@@ -95,7 +98,7 @@ export async function saveSettings(form: FormData): Promise<void> {
       area: text(form, 'area'),
       bankAccountName: text(form, 'bankAccountName'),
     },
-    currentStep: step >= 1 && step <= 4 ? step : current.currentStep,
+    currentStep: step >= 1 && step <= 20 ? step : current.currentStep,
     firstLitter: text(form, 'firstLitter'),
     partnerPriceMode: text(form, 'partnerPriceMode') === 'show' ? 'show' : 'ask',
     helga: {
@@ -320,4 +323,85 @@ export async function deletePuppy(id: string): Promise<void> {
   const changes: Change[] = [{ path: `${PUPPIES_DIR}/${id}.json`, content: null }];
   removeImage(puppy.photo, changes);
   await getStore().commit(changes, `Delete partner puppy ${id}`);
+}
+
+// ---------- Page content ----------
+
+type ItemValue = string | PageImage;
+type PageValue = ItemValue | Record<string, ItemValue>[];
+export type PageContent = Record<string, PageValue>;
+
+export async function getPageContent(id: string): Promise<PageContent | null> {
+  if (!getPageDef(id)) return null;
+  const bytes = await getStore().read(`${PAGES_DIR}/${id}.json`);
+  return bytes ? (JSON.parse(decode(bytes)) as PageContent) : null;
+}
+
+/** Every image reference inside a page's content. */
+function imageRefs(content: PageContent): string[] {
+  const found = JSON.stringify(content).match(/\.\.\/\.\.\/assets\/[\w./-]+/g);
+  return found ?? [];
+}
+
+/**
+ * Save a page from the admin form. Field names follow the page definition:
+ * "title", "heroImage" (+ ".src", ".alt", ".position", ".temp" for the kept
+ * image), and "listName.<n>.<field>" for list items, in the order submitted.
+ */
+export async function savePageContent(id: string, form: FormData): Promise<void> {
+  const def = getPageDef(id);
+  const current = await getPageContent(id);
+  if (!def || !current) throw new FormError('ไม่พบหน้านี้');
+
+  const changes: Change[] = [];
+  const known = new Set(imageRefs(current));
+
+  async function readField(field: SimpleField, key: string): Promise<ItemValue> {
+    if (field.type !== 'image') return String(form.get(key) ?? '').replace(/\r\n/g, '\n').trim();
+
+    const alt = text(form, `${key}.alt`);
+    const file = form.get(key);
+    if (hasFile(file)) return { src: await addUpload(file, id, changes), alt };
+
+    // Keeping the current image: only accept one this page already uses.
+    const src = text(form, `${key}.src`);
+    if (!known.has(src)) throw new FormError(`กรุณาเลือกรูปสำหรับ "${field.label}"`);
+    const image: PageImage = { src, alt };
+    const position = text(form, `${key}.position`);
+    if (/^[\d.]+% [\d.]+%$/.test(position)) image.position = position;
+    if (form.get(`${key}.temp`) === 'true') image.temp = true;
+    return image;
+  }
+
+  async function readList(field: Extract<Field, { type: 'list' }>): Promise<Record<string, ItemValue>[]> {
+    const prefix = `${field.name}.`;
+    const indexes: string[] = [];
+    for (const key of form.keys()) {
+      const index = key.startsWith(prefix) ? key.slice(prefix.length).split('.')[0] : '';
+      if (/^\d+$/.test(index) && !indexes.includes(index)) indexes.push(index);
+    }
+    const items: Record<string, ItemValue>[] = [];
+    for (const index of indexes) {
+      const item: Record<string, ItemValue> = {};
+      for (const child of field.fields) {
+        item[child.name] = await readField(child, `${prefix}${index}.${child.name}`);
+      }
+      items.push(item);
+    }
+    return items;
+  }
+
+  const next: PageContent = {};
+  for (const section of def.sections) {
+    for (const field of section.fields) {
+      next[field.name] = field.type === 'list' ? await readList(field) : await readField(field, field.name);
+    }
+  }
+
+  // Uploaded images that the page no longer uses go away with this save.
+  const kept = new Set(imageRefs(next));
+  for (const ref of known) if (!kept.has(ref)) removeImage(ref, changes);
+
+  changes.push({ path: `${PAGES_DIR}/${id}.json`, content: `${JSON.stringify(next, null, 2)}\n` });
+  await getStore().commit(changes, `Update page content: ${id}`);
 }

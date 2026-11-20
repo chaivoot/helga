@@ -22,6 +22,7 @@ const deleted = Astro.url.searchParams.has('deleted');
 const links = [
   { href: '/admin/journal/', label: 'บันทึกเฮลก้า' },
   { href: '/admin/puppies/', label: 'ลูกสุนัขพันธมิตร' },
+  { href: '/admin/pages/', label: 'เนื้อหาหน้าเว็บ' },
   { href: '/admin/settings/', label: 'ข้อมูลเว็บ' },
 ];
 ---
@@ -112,8 +113,11 @@ const links = [
         }
       }
 
-      document.querySelectorAll<HTMLInputElement>('input[type="file"]').forEach((input) => {
-        input.addEventListener('change', async () => {
+      // Delegated, so file inputs in list items added later are covered too.
+      document.addEventListener('change', async (event) => {
+        const input = event.target;
+        if (!(input instanceof HTMLInputElement) || input.type !== 'file') return;
+        {
           if (!input.files?.length) return;
           const submit = input.form?.querySelector<HTMLButtonElement>('button[type="submit"]');
           if (submit) submit.disabled = true;
@@ -121,7 +125,27 @@ const links = [
           for (const file of input.files) transfer.items.add(await shrink(file));
           input.files = transfer.files;
           if (submit) submit.disabled = false;
-        });
+        }
+      });
+
+      // Repeatable lists: add an item from the <template>, or remove one.
+      document.addEventListener('click', (event) => {
+        const target = event.target instanceof Element ? event.target : null;
+        const remove = target?.closest('[data-list-remove]');
+        if (remove) {
+          remove.closest('[data-list-item]')?.remove();
+          return;
+        }
+        const add = target?.closest<HTMLElement>('[data-list-add]');
+        const list = add?.closest('[data-list]');
+        const template = list?.querySelector<HTMLTemplateElement>(':scope > template');
+        const items = list?.querySelector(':scope > [data-list-items]');
+        if (!list || !template || !items) return;
+        // Any unused number works as the item's key; order comes from the DOM.
+        const next = String(Date.now());
+        const html = template.innerHTML.replaceAll('__index__', next);
+        items.insertAdjacentHTML('beforeend', html);
+        items.lastElementChild?.querySelector<HTMLElement>('input, textarea')?.focus();
       });
 
       document.querySelectorAll<HTMLButtonElement>('[data-confirm]').forEach((button) => {

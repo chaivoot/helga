@@ -1,38 +1,16 @@
 ---
 import Photo from '../../components/Photo.astro';
-import { images } from '../../data/images';
-import { site } from '../../data/site';
+import content from '../../content/pages/health.json';
+import { page, paragraphs, photo, rich } from '../../data/pages';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 
-const conditions = [
-  {
-    title: 'ภาวะแพ้ยาบางชนิด (MDR1)',
-    body: 'ความผิดปกติของยีน MDR1 ทำให้เกิดพิษต่อระบบประสาทเมื่อได้รับยาบางชนิด เช่น ไอเวอร์เมกติน และยาแก้ท้องเสียหรือยาปฏิชีวนะบางตัว ควรแจ้งสัตวแพทย์ทุกครั้งว่าเป็นเชลตี้',
-  },
-  {
-    title: 'Collie Eye Anomaly (CEA)',
-    body: 'ความผิดปกติของตาที่ถ่ายทอดทางพันธุกรรม โครงสร้างบางส่วนของตาไม่พัฒนาตามปกติตั้งแต่เกิด',
-  },
-  {
-    title: 'จอประสาทตาเสื่อม (PRA)',
-    body: 'จอประสาทตาเสื่อมลงเรื่อยๆ ทำให้การมองเห็นลดลงจนอาจตาบอดสนิท',
-  },
-  {
-    title: 'Dermatomyositis',
-    body: 'โรคภูมิคุ้มกันทำร้ายตัวเองที่ถ่ายทอดทางพันธุกรรม บางครั้งเรียกว่า sheltie skin syndrome',
-  },
-  { title: 'ข้อสะโพกเสื่อม (Hip Dysplasia)', body: 'ไม่ใช่สายพันธุ์ที่พบบ่อยที่สุด แต่ก็พบได้' },
-  {
-    title: 'อื่นๆ',
-    body: 'มีรายงานหูหนวกแต่กำเนิด ข้อศอกเคลื่อนแต่กำเนิด ไทรอยด์ต่ำ และโรคหัวใจแต่กำเนิด (PDA)',
-  },
-];
+const p = page(content);
 ---
 
 <BaseLayout
-  title="สุขภาพเชลตี้"
+  title={p.title}
   current="sheltie"
-  description="โรคทางพันธุกรรมของเชลตี้ที่ควรรู้ เช่น MDR1, CEA, PRA และสิ่งที่ผู้เพาะพันธุ์ที่ดีควรคัดกรอง"
+  description={p.lead}
 >
   <!-- Hero -->
   <section class="wrap split hero">
@@ -40,29 +18,24 @@ const conditions = [
       <nav class="breadcrumb" aria-label="breadcrumb">
         <a href="/">หน้าแรก</a> / <a href="/sheltie/">รู้จักเชลตี้</a> / สุขภาพเชลตี้
       </nav>
-      <h1 class="page-title">สุขภาพเชลตี้</h1>
-      <p class="lead">
-        เชลตี้เป็นสุนัขแข็งแรง คล่องแคล่ว และฉลาด แต่มีปัญหาสุขภาพบางอย่างที่มีสาเหตุจากพันธุกรรม
-        ผู้เพาะพันธุ์ที่ดีจึงควรรู้และคัดพ่อแม่พันธุ์อย่างระมัดระวัง
-      </p>
+      <h1 class="page-title">{p.title}</h1>
+      <p class="lead" set:html={rich(p.lead)} />
     </div>
     <Photo
-      src={images.healthVetTri}
-      alt="สัตวแพทย์ตรวจตาเชลตี้สีไตรคัลเลอร์บนโต๊ะตรวจ (ภาพประกอบ)"
+      {...photo(p.heroImage)}
       illustration
       ratio="4 / 3"
       radius={28}
-      position="62% 50%"
       loading="eager"
     />
   </section>
 
   <!-- Accordion: one item open at a time -->
   <section class="wrap stack conditions" style="--wrap:860px;--gap:20px">
-    <h2>โรคทางพันธุกรรมที่ควรรู้</h2>
+    <h2>{p.conditionsTitle}</h2>
     <div class="stack" style="--gap:12px" data-accordion>
       {
-        conditions.map((condition, i) => (
+        p.conditions.map((condition, i) => (
           <div class="item">
             <h3>
               <button
@@ -85,9 +58,8 @@ const conditions = [
               role="region"
               aria-labelledby={`condition-${i}`}
               hidden={i !== 0}
-            >
-              {condition.body}
-            </p>
+              set:html={rich(condition.body)}
+            />
           </div>
         ))
       }
@@ -97,16 +69,18 @@ const conditions = [
   <!-- What we do -->
   <section class="wrap" style="--wrap:860px">
     <div class="ours stack" style="--gap:12px">
-      <h2>สิ่งที่ {site.name} ทำเพื่อสุขภาพลูกสุนัข</h2>
-      <p class="todo">[รอเจ้าของใส่สิ่งที่ทำจริง เช่น ตรวจตา ตรวจยีน]</p>
+      <h2>{p.oursTitle}</h2>
+      {
+        paragraphs(p.oursBody).map((text) => (
+          <p class:list={{ todo: text.startsWith('[') }} set:html={rich(text)} />
+        ))
+      }
     </div>
   </section>
 
   <!-- Disclaimer -->
   <section class="wrap disclaimer" style="--wrap:860px">
-    <p role="note">
-      ข้อมูลนี้เพื่อความรู้ทั่วไป ไม่ใช่คำวินิจฉัยทางการแพทย์ ปรึกษาสัตวแพทย์เสมอ
-    </p>
+    <p role="note" set:html={rich(p.disclaimer)} />
   </section>
 </BaseLayout>
 

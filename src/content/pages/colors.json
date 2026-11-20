@@ -1,0 +1,90 @@
+{
+  "title": "สีเชลตี้",
+  "lead": "[คำนำหน้าสีเชลตี้ - เนื้อหารอเขียนเพิ่ม]",
+  "note": "ภาพในหน้านี้เป็นภาพประกอบ ไม่ใช่สุนัขของ {name}",
+  "colors": [
+    {
+      "name": "เซเบิล",
+      "english": "Sable",
+      "image": {
+        "src": "../../assets/images/sable-adult-v2.webp",
+        "alt": "เชลตี้สีเซเบิลนอนบนสนามหญ้า (ภาพประกอบ)",
+        "position": "60% 50%"
+      },
+      "text": "[คำอธิบายสีเซเบิล - เนื้อหารอเขียนเพิ่ม]"
+    },
+    {
+      "name": "ไตรคัลเลอร์",
+      "english": "Tricolor",
+      "image": {
+        "src": "../../assets/images/tri-adult.webp",
+        "alt": "เชลตี้สีไตรคัลเลอร์ยืนข้างลำธาร (ภาพประกอบ)",
+        "position": "50% 45%"
+      },
+      "text": "[คำอธิบายสีไตรคัลเลอร์ - เนื้อหารอเขียนเพิ่ม]"
+    },
+    {
+      "name": "ไบแบล็ก",
+      "english": "Bi-Black",
+      "image": {
+        "src": "../../assets/images/biblack-adult-stand.webp",
+        "alt": "เชลตี้สีไบแบล็กยืนด้านข้างบนสนามหญ้า (ภาพประกอบ)",
+        "position": "45% 45%"
+      },
+      "text": "[คำอธิบายสีไบแบล็ก - เนื้อหารอเขียนเพิ่ม]"
+    }
+  ],
+  "pupsTitle": "สีตอนเด็กกับตอนโต",
+  "pupsBody": "[คำอธิบายการเปลี่ยนสีขนจากลูกสุนัขถึงตัวโต - เนื้อหารอเขียนเพิ่ม]",
+  "pupColors": [
+    {
+      "image": {
+        "src": "../../assets/images/sable-pup-tile.webp",
+        "alt": "ลูกเชลตี้สีเซเบิลนั่งมองกล้อง (ภาพประกอบ)",
+        "position": "50% 30%"
+      },
+      "caption": "ลูกเชลตี้เซเบิล"
+    },
+    {
+      "image": {
+        "src": "../../assets/images/tri-pup-patio.webp",
+        "alt": "ลูกเชลตี้สีไตรคัลเลอร์นั่งมองกล้อง (ภาพประกอบ)",
+        "position": "50% 45%"
+      },
+      "caption": "ลูกเชลตี้ไตร"
+    },
+    {
+      "image": {
+        "src": "../../assets/images/biblack-pup-tile.webp",
+        "alt": "ลูกเชลตี้สีไบแบล็กนั่งมองกล้อง (ภาพประกอบ)",
+        "position": "50% 30%"
+      },
+      "caption": "ลูกเชลตี้ไบแบล็ก"
+    }
+  ],
+  "othersTitle": "สีอื่นๆ",
+  "others": [
+    {
+      "name": "บลูเมิร์ล",
+      "english": "Blue Merle",
+      "image": {
+        "src": "../../assets/images/bluemerle-stand.webp",
+        "alt": "เชลตี้สีบลูเมิร์ล (ภาพประกอบ)",
+        "position": "30% 40%"
+      },
+      "text": "[คำอธิบาย - รอเขียนเพิ่ม]"
+    },
+    {
+      "name": "อื่นๆ",
+      "english": "",
+      "image": {
+        "src": "../../assets/images/bluemerle-sit.webp",
+        "alt": "ภาพเชลตี้สีอื่นๆ",
+        "temp": true
+      },
+      "text": "[คำอธิบาย - รอเขียนเพิ่ม]"
+    }
+  ],
+  "bannerTitle": "ชอบสีไหน บอกเราไว้ได้",
+  "bannerText": "เลือกสีที่สนใจตอนลงชื่อรอครอกแรก"
+}

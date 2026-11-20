@@ -1,99 +1,55 @@
 ---
 import CtaBanner from '../../components/CtaBanner.astro';
 import Photo from '../../components/Photo.astro';
-import { images } from '../../data/images';
-import { site } from '../../data/site';
+import content from '../../content/pages/colors.json';
+import { page, paragraphs, photo, rich } from '../../data/pages';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 
-const mainColors = [
-  {
-    name: 'เซเบิล',
-    english: 'Sable',
-    photo: images.sableAdult,
-    alt: 'เชลตี้สีเซเบิลนอนบนสนามหญ้า (ภาพประกอบ)',
-    position: '60% 50%',
-    swatch: 'background:#B9874D;box-shadow:inset -6px 0 0 #FFFFFF',
-    text: '[คำอธิบายสีเซเบิล - เนื้อหารอเขียนเพิ่ม]',
-  },
-  {
-    name: 'ไตรคัลเลอร์',
-    english: 'Tricolor',
-    photo: images.triAdult,
-    alt: 'เชลตี้สีไตรคัลเลอร์ยืนข้างลำธาร (ภาพประกอบ)',
-    position: '50% 45%',
-    swatch: 'background:linear-gradient(90deg,#1F1F1F 60%,#A86A2E 60%)',
-    text: '[คำอธิบายสีไตรคัลเลอร์ - เนื้อหารอเขียนเพิ่ม]',
-  },
-  {
-    name: 'ไบแบล็ก',
-    english: 'Bi-Black',
-    photo: images.biblackAdultStand,
-    alt: 'เชลตี้สีไบแบล็กยืนด้านข้างบนสนามหญ้า (ภาพประกอบ)',
-    position: '45% 45%',
-    swatch: 'background:#1F1F1F;box-shadow:inset -6px 0 0 #FFFFFF',
-    text: '[คำอธิบายสีไบแบล็ก - เนื้อหารอเขียนเพิ่ม]',
-  },
-];
+const p = page(content);
 
-const puppyColors = [
-  {
-    photo: images.sablePupTile,
-    alt: 'ลูกเชลตี้สีเซเบิลนั่งมองกล้อง (ภาพประกอบ)',
-    position: '50% 30%',
-    caption: 'ลูกเชลตี้เซเบิล',
-  },
-  {
-    photo: images.triPupPatio,
-    alt: 'ลูกเชลตี้สีไตรคัลเลอร์นั่งมองกล้อง (ภาพประกอบ)',
-    position: '50% 45%',
-    caption: 'ลูกเชลตี้ไตร',
-  },
-  {
-    photo: images.biblackPupTile,
-    alt: 'ลูกเชลตี้สีไบแบล็กนั่งมองกล้อง (ภาพประกอบ)',
-    position: '50% 30%',
-    caption: 'ลูกเชลตี้ไบแบล็ก',
-  },
+// Coat colour dots, matched to the main colours by position.
+const swatches = [
+  'background:#B9874D;box-shadow:inset -6px 0 0 #FFFFFF',
+  'background:linear-gradient(90deg,#1F1F1F 60%,#A86A2E 60%)',
+  'background:#1F1F1F;box-shadow:inset -6px 0 0 #FFFFFF',
 ];
 ---
 
 <BaseLayout
-  title="สีเชลตี้"
+  title={p.title}
   current="sheltie"
-  description="สีของเชลตี้: เซเบิล ไตรคัลเลอร์ ไบแบล็ก บลูเมิร์ล และสีอื่นๆ พร้อมภาพประกอบตอนเป็นลูกสุนัขและตอนโต"
+  description={`สีของเชลตี้: ${[...p.colors, ...p.others].map((color) => color.name).join(' ')}`}
 >
   <!-- Page hero -->
   <section class="wrap stack hero">
     <nav class="breadcrumb" aria-label="breadcrumb">
       <a href="/">หน้าแรก</a> / <a href="/sheltie/">รู้จักเชลตี้</a> / สีเชลตี้
     </nav>
-    <h1 class="page-title">สีเชลตี้</h1>
-    <p class="lead" style="max-width:720px">[คำนำหน้าสีเชลตี้ - เนื้อหารอเขียนเพิ่ม]</p>
-    <p class="hero-note">ภาพในหน้านี้เป็นภาพประกอบ ไม่ใช่สุนัขของ {site.name}</p>
+    <h1 class="page-title">{p.title}</h1>
+    <p class="lead" style="max-width:720px" set:html={rich(p.lead)} />
+    <p class="hero-note">{p.note}</p>
   </section>
 
   <!-- Main colours -->
   <section class="wrap main">
     <div class="color-grid">
       {
-        mainColors.map((color) => (
+        p.colors.map((color, i) => (
           <article class="card color">
             <Photo
-              src={color.photo}
-              alt={color.alt}
+              {...photo(color.image)}
               illustration
               ratio="4 / 3"
-              position={color.position}
               style="--badge-inset:12px"
               sizes="(max-width: 700px) 100vw, 400px"
             />
             <div class="color-body stack" style="--gap:10px">
               <div class="color-name">
-                <span class="swatch" style={color.swatch} aria-hidden="true" />
+                {swatches[i] && <span class="swatch" style={swatches[i]} aria-hidden="true" />}
                 <h2>{color.name}</h2>
                 <span>{color.english}</span>
               </div>
-              <p>{color.text}</p>
+              <p set:html={rich(color.text)} />
             </div>
           </article>
         ))
@@ -106,21 +62,17 @@ const puppyColors = [
     <div class="wrap pups">
       <div class="stack" style="--gap:14px">
         <span class="eyebrow">ตอนเป็นลูกสุนัข</span>
-        <h2 class="section-title" style="line-height:1.3">สีตอนเด็กกับตอนโต</h2>
-        <p class="pups-text">
-          [คำอธิบายการเปลี่ยนสีขนจากลูกสุนัขถึงตัวโต - เนื้อหารอเขียนเพิ่ม]
-        </p>
+        <h2 class="section-title" style="line-height:1.3">{p.pupsTitle}</h2>
+        {paragraphs(p.pupsBody).map((text) => <p class="pups-text" set:html={rich(text)} />)}
       </div>
       <div class="pups-photos">
         {
-          puppyColors.map((pup) => (
+          p.pupColors.map((pup) => (
             <figure class="stack" style="--gap:10px">
               <Photo
-                src={pup.photo}
-                alt={pup.alt}
+                {...photo(pup.image)}
                 ratio="3 / 4"
                 radius={20}
-                position={pup.position}
                 widths={[480]}
                 sizes="(max-width: 700px) 33vw, 200px"
               />
@@ -134,37 +86,27 @@ const puppyColors = [
 
   <!-- Other colours -->
   <section class="wrap stack others" style="--gap:24px">
-    <h2>สีอื่นๆ</h2>
+    <h2>{p.othersTitle}</h2>
     <div class="other-grid">
-      <article class="card other">
-        <Photo
-          class="other-photo"
-          src={images.bluemerleStand}
-          alt="เชลตี้สีบลูเมิร์ล (ภาพประกอบ)"
-          position="30% 40%"
-          widths={[200]}
-          sizes="96px"
-        />
-        <div class="stack" style="--gap:6px">
-          <h3>บลูเมิร์ล <span>Blue Merle</span></h3>
-          <p>[คำอธิบาย - รอเขียนเพิ่ม]</p>
-        </div>
-      </article>
-      <article class="card other">
-        <Photo
-          class="other-photo"
-          src={images.bluemerleSit}
-          alt="ภาพเชลตี้สีอื่นๆ"
-          temp
-          compact
-          widths={[200]}
-          sizes="96px"
-        />
-        <div class="stack" style="--gap:6px">
-          <h3>อื่นๆ</h3>
-          <p>[คำอธิบาย - รอเขียนเพิ่ม]</p>
-        </div>
-      </article>
+      {
+        p.others.map((color) => (
+          <article class="card other">
+            <Photo
+              class="other-photo"
+              {...photo(color.image)}
+              compact
+              widths={[200]}
+              sizes="96px"
+            />
+            <div class="stack" style="--gap:6px">
+              <h3>
+                {color.name} {color.english && <span>{color.english}</span>}
+              </h3>
+              <p set:html={rich(color.text)} />
+            </div>
+          </article>
+        ))
+      }
     </div>
   </section>
 
@@ -172,8 +114,8 @@ const puppyColors = [
   <section class="wrap cta">
     <CtaBanner
       href="/puppies/"
-      title="ชอบสีไหน บอกเราไว้ได้"
-      text="เลือกสีที่สนใจตอนลงชื่อรอครอกแรก"
+      title={p.bannerTitle}
+      text={p.bannerText}
       action="ลงชื่อรอครอกแรก"
     />
   </section>

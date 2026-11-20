@@ -1,0 +1,25 @@
+---
+import { pageDefs } from '../../../data/pageDefs';
+import AdminLayout from '../../../layouts/AdminLayout.astro';
+
+export const prerender = false;
+---
+
+<AdminLayout title="เนื้อหาหน้าเว็บ">
+  <p class="admin-hint">เลือกหน้าที่ต้องการแก้ข้อความหรือรูป</p>
+  <div class="admin-list">
+    {
+      pageDefs.map((page) => (
+        <a href={`/admin/pages/${page.id}/`} class="admin-item">
+          <span class="admin-item-text">
+            <strong>{page.title}</strong>
+            <span>{page.href}</span>
+          </span>
+          <span class="admin-item-go" aria-hidden="true">
+            →
+          </span>
+        </a>
+      ))
+    }
+  </div>
+</AdminLayout>

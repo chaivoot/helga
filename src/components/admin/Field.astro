@@ -1,0 +1,66 @@
+---
+// One editable field of a page, rendered from its definition.
+import type { SimpleField } from '../../data/pageDefs';
+import type { PageImage } from '../../data/pages';
+
+interface Props {
+  field: SimpleField;
+  /** Form field name, e.g. "title" or "colors.2.image". */
+  name: string;
+  value?: string | PageImage;
+}
+
+const { field, name, value } = Astro.props;
+const image = typeof value === 'object' ? value : undefined;
+const textValue = typeof value === 'string' ? value : '';
+---
+
+{
+  field.type === 'text' && (
+    <label class="field">
+      {field.label}
+      <input type="text" name={name} value={textValue} />
+      {field.hint && <span class="admin-hint">{field.hint}</span>}
+    </label>
+  )
+}
+{
+  field.type === 'textarea' && (
+    <label class="field">
+      {field.label}
+      <textarea
+        name={name}
+        rows={Math.min(12, Math.max(2, Math.ceil(textValue.length / 55)))}
+        set:text={textValue}
+      />
+      {field.hint && <span class="admin-hint">{field.hint}</span>}
+    </label>
+  )
+}
+{
+  field.type === 'image' && (
+    <div class="field">
+      {field.label}
+      {image && (
+        <span class="admin-photo">
+          <img src={`/admin/image?ref=${encodeURIComponent(image.src)}`} alt="" loading="lazy" />
+          {image.temp ? 'ตอนนี้เป็นรูปตัวอย่าง เลือกรูปจริงเพื่อแทนที่' : 'เลือกรูปใหม่ถ้าต้องการเปลี่ยน'}
+        </span>
+      )}
+      {image && <input type="hidden" name={`${name}.src`} value={image.src} />}
+      {image?.position && <input type="hidden" name={`${name}.position`} value={image.position} />}
+      {image?.temp && <input type="hidden" name={`${name}.temp`} value="true" />}
+      <input
+        type="file"
+        name={name}
+        accept="image/jpeg,image/png,image/webp"
+        aria-label={field.label}
+        required={!image}
+      />
+      <label class="field">
+        <span class="admin-hint">คำอธิบายรูป (สำหรับ Google และผู้ใช้โปรแกรมอ่านหน้าจอ)</span>
+        <input type="text" name={`${name}.alt`} value={image?.alt ?? ''} />
+      </label>
+    </div>
+  )
+}

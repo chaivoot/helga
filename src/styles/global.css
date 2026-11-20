@@ -61,6 +61,14 @@ body {
 :where(a:hover) {
   color: var(--brown-dark);
 }
+/* A link that reads as plain text. */
+a.quiet-link,
+a.quiet-link:hover {
+  color: inherit;
+  font-weight: inherit;
+  text-decoration: none;
+  cursor: text;
+}
 
 h1,
 h2,

@@ -1,0 +1,62 @@
+{
+  "title": "พ่อแม่พันธุ์ของเรา",
+  "lead": "ลูกสุนัขที่ดีเริ่มจากพ่อแม่ที่แข็งแรงและนิสัยดี นี่คือสุนัขของ {name}",
+  "helgaImage": {
+    "src": "../../assets/images/biblack-pup-grass.webp",
+    "alt": "ภาพเฮลก้า",
+    "temp": true
+  },
+  "helgaName": "Helga",
+  "helgaNameTh": "(เฮลก้า)",
+  "helgaSub": "เชลตี้ตัวแรกและผู้ก่อตั้ง {name}",
+  "helgaSex": "เมีย",
+  "helgaColor": "ไบแบล็ก",
+  "parents": [
+    {
+      "role": "พ่อ",
+      "text": "สีไตรคัลเลอร์ สายประกวด ใบเพ็ดดีกรีสมาคมพัฒนาพันธุ์สุนัขแห่งประเทศไทย"
+    },
+    {
+      "role": "แม่",
+      "text": "สีบลูเมิร์ล ใบเพ็ดดีกรีสมาคมพัฒนาพันธุ์สุนัขแห่งประเทศไทย"
+    }
+  ],
+  "agesTitle": "เฮลก้าตามช่วงอายุ",
+  "ages": [
+    {
+      "image": {
+        "src": "../../assets/images/biblack-pup-tile.webp",
+        "alt": "เฮลก้าอายุ 2 เดือน",
+        "temp": true
+      },
+      "caption": "2 เดือน"
+    },
+    {
+      "image": {
+        "src": "../../assets/images/biblack-pup-grass.webp",
+        "alt": "เฮลก้าอายุ 3 เดือน",
+        "temp": true
+      },
+      "caption": "3 เดือน"
+    },
+    {
+      "image": {
+        "src": "../../assets/images/biblack-pup-tile.webp",
+        "alt": "เฮลก้า ช่วงอายุถัดไป",
+        "temp": true
+      },
+      "caption": "[ ] เดือน"
+    },
+    {
+      "image": {
+        "src": "../../assets/images/biblack-adult-stand.webp",
+        "alt": "เฮลก้า ช่วงอายุถัดไป",
+        "temp": true
+      },
+      "caption": "[ ] เดือน"
+    }
+  ],
+  "sireTitle": "พ่อพันธุ์",
+  "sireHeading": "กำลังคัดเลือกพ่อพันธุ์ที่เหมาะสม",
+  "sireText": "เราจะเลือกพ่อพันธุ์ที่มีใบเพ็ดดีกรี สุขภาพแข็งแรง และนิสัยดี ก่อนเฮลก้าจะพร้อมเป็นแม่ โปรไฟล์จะขึ้นที่นี่เมื่อเลือกได้แล้ว"
+}
