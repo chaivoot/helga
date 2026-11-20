@@ -34,6 +34,7 @@ const canonical = Astro.site ? new URL(Astro.url.pathname, Astro.site) : undefin
     {canonical && <link rel="canonical" href={canonical} />}
     <meta property="og:title" content={fullTitle} />
     <meta property="og:description" content={description} />
+    {canonical && <meta property="og:url" content={canonical} />}
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="th_TH" />
     <meta name="theme-color" content="#FCF9F5" />

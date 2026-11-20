@@ -34,9 +34,9 @@ const p = page(content);
       <a href="/">หน้าแรก</a> / <a href="/journal/">{p.title}</a> / {data.title}
     </nav>
     <div class="meta">
-      <span class="meta-age">{ageLabel(data.ageMonths)}</span>
+      {data.ageMonths !== undefined && <span class="meta-age">{ageLabel(data.ageMonths)}</span>}
       <span class="meta-tag">{data.category}</span>
-      <span class="meta-date">{dateLabel(data.date)}</span>
+      {data.date && <span class="meta-date">{dateLabel(data.date)}</span>}
     </div>
     <h1>{data.title}</h1>
     <Photo

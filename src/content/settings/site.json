@@ -1,20 +1,20 @@
 {
-  "name": "Helga House",
-  "nameTh": "บ้านเชลตี้ เฮลก้าเฮาส์",
+  "name": "Helga Farm",
+  "nameTh": "บ้านเชลตี้ เฮลก้าฟาร์ม",
   "contact": {
-    "line": "[ ]",
+    "line": "@helgafarm",
     "lineUrl": "",
-    "facebook": "[ ]",
+    "facebook": "Helga Farm Shetland Sheepdog",
     "facebookUrl": "",
-    "phone": "[ ]",
-    "area": "[ ]",
-    "bankAccountName": "[ชื่อบัญชีที่ถูกต้อง]"
+    "phone": "08X-XXX-XXXX",
+    "area": "กรุงเทพมหานคร",
+    "bankAccountName": "(ตัวอย่าง) ชื่อบัญชีของฟาร์ม"
   },
   "currentStep": 1,
-  "firstLitter": "[ปีโดยประมาณ หรือ เมื่อเฮลก้าพร้อมเต็มที่]",
+  "firstLitter": "เมื่อเฮลก้าพร้อมเต็มที่ คาดว่าราวปี 2571",
   "partnerPriceMode": "ask",
   "helga": {
-    "born": "[ ]",
-    "temperament": "[นิสัยเฮลก้า 1-2 ประโยค]"
+    "born": "สิงหาคม 2569",
+    "temperament": "ร่าเริง ขี้อ้อน เรียนรู้เร็ว และชอบอยู่ใกล้คน เจอคนแปลกหน้าจะสังเกตก่อนสักพัก แล้วค่อยเข้าไปทักทาย"
   }
 }

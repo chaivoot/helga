@@ -17,11 +17,8 @@ export async function getJournalPosts(): Promise<JournalPost[]> {
 
 const thaiDate = new Intl.DateTimeFormat('th-TH', { dateStyle: 'long' });
 
-export function dateLabel(date?: Date): string {
-  return date ? thaiDate.format(date) : '[วันที่โพสต์]';
-}
+/** Empty when the post has no date yet. */
+export const dateLabel = (date?: Date) => (date ? thaiDate.format(date) : '');
 
-export function ageLabel(months: number | undefined, withUnit = true): string {
-  if (months === undefined) return withUnit ? 'อายุ [ ] เดือน' : 'อายุ [ ]';
-  return `อายุ ${months} เดือน`;
-}
+/** Empty when the post does not say how old Helga was. */
+export const ageLabel = (months?: number) => (months === undefined ? '' : `อายุ ${months} เดือน`);

@@ -13,7 +13,7 @@ export const site = {
     ...settings.contact,
     lineUrl: settings.contact.lineUrl || '#',
     facebookUrl: settings.contact.facebookUrl || '#',
-    phoneUrl: digits ? `tel:${digits}` : '#',
+    phoneUrl: digits.length >= 9 ? `tel:${digits}` : '#',
   },
   /** Turn on once there are real customer reviews to show on the home page. */
   showReviews: false,

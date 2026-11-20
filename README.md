@@ -1,6 +1,6 @@
-# Helga House
+# Helga Farm
 
-Website for Helga House, a Shetland Sheepdog (Sheltie) home breeder. Built with [Astro](https://astro.build) and deployed on Vercel: static public pages plus a small back office at `/admin` for updating content. All copy is in Thai.
+Website for Helga Farm, a Shetland Sheepdog (Sheltie) home breeder. Built with [Astro](https://astro.build) and deployed on Vercel: static public pages plus a small back office at `/admin` for updating content. All copy is in Thai.
 
 ## Commands
 

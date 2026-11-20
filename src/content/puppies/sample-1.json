@@ -1,12 +1,12 @@
 {
   "status": "available",
-  "farm": "[ชื่อฟาร์มพันธมิตร]",
-  "sex": "[ ]",
-  "color": "[ ]",
-  "born": "[ ]",
-  "sire": "[ชื่อพ่อ]",
-  "dam": "[ชื่อแม่]",
-  "price": "[ราคา] บาท",
+  "farm": "ฟาร์มตัวอย่าง เอ",
+  "sex": "เพศเมีย",
+  "color": "เซเบิล",
+  "born": "12 กันยายน 2569",
+  "sire": "Oliver",
+  "dam": "Daisy",
+  "price": "45,000 บาท",
   "photo": "../../assets/images/sable-pup-tile.webp",
   "tempPhoto": true
 }

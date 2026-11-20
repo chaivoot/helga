@@ -24,11 +24,11 @@ const { data } = post;
     radius={radius}
     sizes="(max-width: 700px) 100vw, 400px"
   >
-    <span class="pill pill--over">{ageLabel(data.ageMonths, false)}</span>
+    {data.ageMonths !== undefined && <span class="pill pill--over">{ageLabel(data.ageMonths)}</span>}
   </Photo>
   <div class="meta">
     <span class="pill pill--tag">{data.category}</span>
-    <span class="date">{dateLabel(data.date)}</span>
+    {data.date && <span class="date">{dateLabel(data.date)}</span>}
   </div>
   <Heading class="title">{data.title}</Heading>
   {excerpt && <p class="excerpt">{data.excerpt}</p>}

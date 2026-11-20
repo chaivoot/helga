@@ -26,6 +26,14 @@
     {
       "image": {
         "src": "../../assets/images/biblack-pup-tile.webp",
+        "alt": "เฮลก้าอายุ 6 สัปดาห์",
+        "temp": true
+      },
+      "caption": "6 สัปดาห์"
+    },
+    {
+      "image": {
+        "src": "../../assets/images/biblack-pup-grass.webp",
         "alt": "เฮลก้าอายุ 2 เดือน",
         "temp": true
       },
@@ -33,27 +41,11 @@
     },
     {
       "image": {
-        "src": "../../assets/images/biblack-pup-grass.webp",
+        "src": "../../assets/images/biblack-pup-tile.webp",
         "alt": "เฮลก้าอายุ 3 เดือน",
         "temp": true
       },
       "caption": "3 เดือน"
-    },
-    {
-      "image": {
-        "src": "../../assets/images/biblack-pup-tile.webp",
-        "alt": "เฮลก้า ช่วงอายุถัดไป",
-        "temp": true
-      },
-      "caption": "[ ] เดือน"
-    },
-    {
-      "image": {
-        "src": "../../assets/images/biblack-adult-stand.webp",
-        "alt": "เฮลก้า ช่วงอายุถัดไป",
-        "temp": true
-      },
-      "caption": "[ ] เดือน"
     }
   ],
   "sireTitle": "พ่อพันธุ์",

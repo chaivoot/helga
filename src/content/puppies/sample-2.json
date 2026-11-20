@@ -1,12 +1,12 @@
 {
   "status": "reserved",
-  "farm": "[ชื่อฟาร์มพันธมิตร]",
-  "sex": "[ ]",
-  "color": "[ ]",
-  "born": "[ ]",
-  "sire": "[ชื่อพ่อ]",
-  "dam": "[ชื่อแม่]",
-  "price": "[ราคา] บาท",
+  "farm": "ฟาร์มตัวอย่าง บี",
+  "sex": "เพศผู้",
+  "color": "ไบแบล็ก",
+  "born": "3 กันยายน 2569",
+  "sire": "Bruno",
+  "dam": "Luna",
+  "price": "48,000 บาท",
   "photo": "../../assets/images/biblack-pup-tile.webp",
   "tempPhoto": true
 }
