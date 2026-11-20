@@ -268,18 +268,6 @@ h4,
   color: #fff;
   font-weight: 600;
 }
-.chips--brown {
-  gap: 10px;
-}
-.chips--brown .chip {
-  font-size: 16px;
-  padding: 11px 20px;
-}
-.chips--brown .chip[aria-pressed='true'] {
-  background: var(--brown);
-  border-color: var(--brown);
-}
-
 /* ---------- Forms ---------- */
 
 .form {
@@ -321,37 +309,6 @@ h4,
   opacity: 0.6;
   cursor: progress;
 }
-.form-fineprint {
-  font-size: 13px;
-  line-height: 1.6;
-  color: var(--muted);
-}
-.form-error {
-  font-size: 15px;
-  line-height: 1.6;
-  color: #9c2b1b;
-}
-.form-done-title {
-  font-family: var(--font-head);
-  font-size: 22px;
-}
-.form-done p {
-  font-size: 16px;
-  line-height: 1.75;
-  color: var(--ink-soft);
-}
-.form-reset {
-  align-self: flex-start;
-  font: inherit;
-  background: transparent;
-  border: 0;
-  color: var(--brown);
-  font-weight: 600;
-  padding: 10px 0;
-  cursor: pointer;
-  text-decoration: underline;
-}
-
 /* ---------- Photos ---------- */
 
 .photo {

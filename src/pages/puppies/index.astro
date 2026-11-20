@@ -9,21 +9,6 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 
 const p = page(content);
 
-const sexes = [
-  { value: 'male', label: 'เพศผู้' },
-  { value: 'female', label: 'เพศเมีย' },
-  { value: 'any', label: 'ได้ทั้งคู่' },
-];
-const defaultSex = 'any';
-
-const colors = [
-  'ยังไม่แน่ใจ',
-  'เซเบิล (Sable)',
-  'ไตรคัลเลอร์ (Tricolor)',
-  'ไบแบล็ก (Bi-Black)',
-  'บลูเมิร์ล (Blue Merle)',
-  'อื่นๆ',
-];
 ---
 
 <BaseLayout
@@ -79,68 +64,31 @@ const colors = [
     <a href="/puppies/program/" class="text-link">ดูรายละเอียดโปรแกรมเตรียมความพร้อม →</a>
   </section>
 
-  <!-- Waitlist form -->
+  <!-- Waitlist: sign up by LINE -->
   <section id="waitlist" class="band-white">
-    <div class="wrap stack waitlist" style="--wrap:760px;--gap:28px" data-form-wrap>
+    <div class="wrap stack waitlist" style="--wrap:760px;--gap:28px">
       <div class="stack" style="--gap:10px">
         <span class="eyebrow">WAITLIST</span>
         <h2 class="section-title">{p.waitlistTitle}</h2>
         <p class="waitlist-note" set:html={rich(p.waitlistNote)} />
       </div>
-      <form class="form" data-form="waitlist">
-        <div class="form-row">
-          <label class="field"
-            >ชื่อ
-            <input type="text" name="name" required autocomplete="name" />
-          </label>
-          <label class="field"
-            >เบอร์โทร
-            <input type="tel" name="phone" autocomplete="tel" />
-          </label>
-        </div>
-        <label class="field"
-          >LINE ID
-          <input type="text" name="line" />
-        </label>
-        <fieldset class="choice" data-choice>
-          <legend>เพศที่สนใจ</legend>
-          <input type="hidden" name="sex" value={defaultSex} />
-          <div class="chips chips--brown">
-            {
-              sexes.map((sex) => (
-                <button
-                  type="button"
-                  class="chip"
-                  data-value={sex.value}
-                  data-default={sex.value === defaultSex ? '' : undefined}
-                  aria-pressed={sex.value === defaultSex ? 'true' : 'false'}
-                >
-                  {sex.label}
-                </button>
-              ))
-            }
-          </div>
-        </fieldset>
-        <label class="field"
-          >สีที่สนใจ
-          <select name="color">
-            {colors.map((color) => <option>{color}</option>)}
-          </select>
-        </label>
-        <label class="field"
-          >ข้อความเพิ่มเติม
-          <textarea name="message" rows="4"></textarea>
-        </label>
-        <button type="submit" class="btn form-submit">ส่งชื่อเข้ารายชื่อรอ</button>
-        <p class="form-error" data-form-error role="alert" hidden>
-          ส่งไม่สำเร็จ กรุณาลองอีกครั้ง หรือทัก LINE มาได้เลย
-        </p>
-        <p class="form-fineprint">{p.privacyNote}</p>
-      </form>
-      <div class="form-done stack done" style="--gap:10px" role="status" tabindex="-1" data-form-done hidden>
-        <strong class="form-done-title">{p.thanksTitle}</strong>
-        <p set:html={rich(p.thanksText)} />
-        <button type="button" class="form-reset" data-form-reset>กลับไปที่ฟอร์ม</button>
+      <div class="ask stack" style="--gap:14px">
+        <strong class="head-font">{p.waitlistAskTitle}</strong>
+        <ul class="ask-list">
+          {
+            p.waitlistAsk.map((item) => (
+              <li>
+                <Icon name="check" size={20} />
+                <span set:html={rich(item.text)} />
+              </li>
+            ))
+          }
+        </ul>
+        <a href={site.contact.lineUrl} class="btn btn--line ask-action">
+          <Icon name="chat" size={22} />
+          {p.waitlistAction}
+        </a>
+        <span class="ask-id">LINE: {site.contact.line}</span>
       </div>
     </div>
   </section>
@@ -157,10 +105,6 @@ const colors = [
     />
   </section>
 </BaseLayout>
-
-<script>
-  import '../../scripts/forms';
-</script>
 
 <style>
   .hero {
@@ -240,22 +184,38 @@ const colors = [
     line-height: 1.75;
     color: var(--muted);
   }
-  .choice {
-    border: 0;
-    margin: 0;
-    padding: 0;
-    min-width: 0;
-  }
-  .choice legend {
-    font-size: 15px;
-    font-weight: 500;
-    padding: 0;
-    margin-bottom: 10px;
-  }
-  .done {
+  .ask {
     background: var(--sand);
     border-radius: 20px;
     padding: 28px;
+    align-items: flex-start;
+  }
+  .ask strong {
+    font-size: 20px;
+  }
+  .ask-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    font-size: 16px;
+    line-height: 1.6;
+  }
+  .ask-list li {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+  }
+  .ask-list :global(svg) {
+    color: var(--brown);
+    margin-top: 3px;
+  }
+  .ask-action {
+    font-weight: 700;
+    margin-top: 6px;
+  }
+  .ask-id {
+    font-size: 15px;
+    color: var(--muted);
   }
 
   .partner {

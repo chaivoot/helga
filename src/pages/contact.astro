@@ -23,16 +23,17 @@ const p = page(content);
   </section>
 
   <section class="wrap columns">
-    <!-- Channels -->
+    <a href={contact.lineUrl} class="line-card stack" style="--gap:14px">
+      <div class="line-head">
+        <Icon name="chat" size={34} />
+        <strong class="head-font">{p.lineTitle}</strong>
+      </div>
+      <span class="line-id">LINE: {contact.line}</span>
+      <p set:html={rich(p.lineText)} />
+      <span class="line-action">{p.lineAction} →</span>
+    </a>
+
     <div class="channels stack" style="--gap:14px">
-      <a href={contact.lineUrl} class="line-card stack" style="--gap:14px">
-        <div class="line-head">
-          <Icon name="chat" size={34} />
-          <strong class="head-font">ทัก LINE</strong>
-        </div>
-        <span class="line-id">LINE: {contact.line}</span>
-        <span class="line-action">เปิดแชท LINE →</span>
-      </a>
       <a href={contact.facebookUrl} class="channel">
         <Icon name="facebook" color="var(--brown)" />
         <span><strong>Facebook</strong><span>{contact.facebook}</span></span>
@@ -46,43 +47,6 @@ const p = page(content);
         <span><strong>พื้นที่</strong><span>{contact.area}</span></span>
       </div>
     </div>
-
-    <!-- Form -->
-    <div class="form-card" data-form-wrap>
-      <form class="form" style="gap:18px" data-form="contact">
-        <h2>{p.formTitle}</h2>
-        <div class="form-row" style="grid-template-columns:repeat(auto-fit,minmax(200px,1fr))">
-          <label class="field"
-            >ชื่อ
-            <input type="text" name="name" required autocomplete="name" />
-          </label>
-          <label class="field"
-            >เบอร์โทร หรือ LINE ID
-            <input type="text" name="contact" />
-          </label>
-        </div>
-        <label class="field"
-          >เรื่องที่ติดต่อ
-          <select name="topic">
-            {p.topics.map((topic) => <option>{topic.text}</option>)}
-          </select>
-        </label>
-        <label class="field"
-          >ข้อความ
-          <textarea name="message" rows="5"></textarea>
-        </label>
-        <button type="submit" class="btn form-submit">ส่งข้อความ</button>
-        <p class="form-error" data-form-error role="alert" hidden>
-          ส่งไม่สำเร็จ กรุณาลองอีกครั้ง หรือทัก LINE มาได้เลย
-        </p>
-        <p class="form-fineprint">{p.privacyNote}</p>
-      </form>
-      <div class="form-done stack" style="--gap:10px" role="status" tabindex="-1" data-form-done hidden>
-        <strong class="form-done-title">{p.thanksTitle}</strong>
-        <p set:html={rich(p.thanksText)} />
-        <button type="button" class="form-reset" data-form-reset>ส่งข้อความใหม่</button>
-      </div>
-    </div>
   </section>
 
   <section class="wrap scam">
@@ -93,10 +57,6 @@ const p = page(content);
   </section>
 </BaseLayout>
 
-<script>
-  import '../scripts/forms';
-</script>
-
 <style>
   .hero {
     padding-block: 48px 24px;
@@ -106,13 +66,16 @@ const p = page(content);
     display: flex;
     flex-wrap: wrap;
     gap: 32px;
-    align-items: flex-start;
+    align-items: stretch;
   }
   .channels {
     flex: 1 1 340px;
     min-width: 0;
   }
   .line-card {
+    flex: 1 1 340px;
+    min-width: 0;
+    justify-content: center;
     text-decoration: none;
     background: var(--line-green);
     color: var(--line-ink);
@@ -129,6 +92,11 @@ const p = page(content);
   }
   .line-id {
     font-size: 17px;
+    font-weight: 600;
+  }
+  .line-card p {
+    font-size: 16px;
+    line-height: 1.7;
   }
   .line-action {
     align-self: flex-start;
@@ -160,18 +128,6 @@ const p = page(content);
   .channel span span {
     font-size: 15px;
     color: var(--muted);
-  }
-
-  .form-card {
-    flex: 999 1 480px;
-    min-width: 0;
-    background: var(--surface);
-    border: 1px solid var(--line);
-    border-radius: 24px;
-    padding: 28px;
-  }
-  .form-card h2 {
-    font-size: 24px;
   }
 
   .scam {

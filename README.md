@@ -16,7 +16,7 @@ npm run check    # type-check .astro and .ts files
 
 | Path | What lives there |
 | --- | --- |
-| `src/pages/` | One file per public page. `/`, `/puppies/` (waitlist), `/puppies/partners/`, `/puppies/program/`, `/our-dogs/`, `/sheltie/`, `/sheltie/health/`, `/sheltie/colors/`, `/journal/`, `/journal/[id]/`, `/contact/` |
+| `src/pages/` | One file per public page. `/`, `/puppies/` (waitlist, by LINE), `/puppies/partners/`, `/puppies/program/`, `/our-dogs/`, `/sheltie/`, `/sheltie/health/`, `/sheltie/colors/`, `/journal/`, `/journal/[id]/`, `/contact/` |
 | `src/pages/admin/` | The back office (server-rendered, password protected) |
 | `src/lib/admin/` | Back office logic: login session, content read/write, GitHub storage |
 | `src/layouts/` | `BaseLayout` (public pages) and `AdminLayout` (back office) |
@@ -57,7 +57,6 @@ Text in `[square brackets]` on the site is a placeholder waiting for real conten
 - **Journal and partner puppies**: the `sample-*` entries are placeholders; replace them from `/admin`.
 - **Page copy** (for example the Sheltie colour descriptions): `/admin/pages`.
 - **Domain**: set `site` in `astro.config.mjs` to get canonical URLs.
-- **Forms**: the waitlist and contact forms POST to `PUBLIC_FORM_ENDPOINT`. Until it is set they send nothing and only show the thank-you message.
 
 ## Photos
 

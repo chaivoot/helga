@@ -326,7 +326,7 @@ export const pageDefs: PageDef[] = [
         ]
       },
       {
-        "title": "ฟอร์มลงชื่อ",
+        "title": "ลงชื่อรอครอกแรก (ทาง LINE)",
         "fields": [
           {
             "name": "waitlistTitle",
@@ -339,19 +339,27 @@ export const pageDefs: PageDef[] = [
             "type": "textarea"
           },
           {
-            "name": "privacyNote",
-            "label": "ข้อความนโยบายข้อมูลส่วนบุคคล",
+            "name": "waitlistAskTitle",
+            "label": "หัวข้อรายการ",
             "type": "text"
           },
           {
-            "name": "thanksTitle",
-            "label": "ข้อความขอบคุณ หัวข้อ",
-            "type": "text"
+            "name": "waitlistAsk",
+            "label": "สิ่งที่ให้บอกใน LINE",
+            "type": "list",
+            "itemLabel": "ข้อ",
+            "fields": [
+              {
+                "name": "text",
+                "label": "ข้อความ",
+                "type": "text"
+              }
+            ]
           },
           {
-            "name": "thanksText",
-            "label": "ข้อความขอบคุณ รายละเอียด",
-            "type": "textarea"
+            "name": "waitlistAction",
+            "label": "ข้อความบนปุ่ม",
+            "type": "text"
           }
         ]
       },
@@ -1101,40 +1109,22 @@ export const pageDefs: PageDef[] = [
         ]
       },
       {
-        "title": "ฟอร์มส่งข้อความ",
+        "title": "การ์ด LINE",
         "fields": [
           {
-            "name": "formTitle",
+            "name": "lineTitle",
             "label": "หัวข้อ",
             "type": "text"
           },
           {
-            "name": "topics",
-            "label": "เรื่องที่ติดต่อ (ตัวเลือกในฟอร์ม)",
-            "type": "list",
-            "itemLabel": "ตัวเลือก",
-            "fields": [
-              {
-                "name": "text",
-                "label": "ข้อความ",
-                "type": "text"
-              }
-            ]
-          },
-          {
-            "name": "privacyNote",
-            "label": "ข้อความนโยบายข้อมูลส่วนบุคคล",
-            "type": "text"
-          },
-          {
-            "name": "thanksTitle",
-            "label": "ข้อความขอบคุณ หัวข้อ",
-            "type": "text"
-          },
-          {
-            "name": "thanksText",
-            "label": "ข้อความขอบคุณ รายละเอียด",
+            "name": "lineText",
+            "label": "ข้อความ",
             "type": "textarea"
+          },
+          {
+            "name": "lineAction",
+            "label": "ข้อความบนปุ่ม",
+            "type": "text"
           }
         ]
       }
