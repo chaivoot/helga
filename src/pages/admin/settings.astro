@@ -1,0 +1,116 @@
+---
+import { timelineSteps } from '../../data/options';
+import AdminLayout from '../../layouts/AdminLayout.astro';
+import { FormError, getSettings, saveSettings } from '../../lib/admin/content';
+
+export const prerender = false;
+
+let error: string | undefined;
+if (Astro.request.method === 'POST') {
+  try {
+    await saveSettings(await Astro.request.formData());
+    return Astro.redirect('/admin/settings/?saved');
+  } catch (cause) {
+    if (!(cause instanceof FormError)) console.error(cause);
+    error = cause instanceof FormError ? cause.message : 'บันทึกไม่สำเร็จ กรุณาลองอีกครั้ง';
+  }
+}
+
+const settings = await getSettings();
+const { contact } = settings;
+---
+
+<AdminLayout title="ข้อมูลเว็บ" error={error}>
+  <form method="post" class="form admin-form" data-saving>
+    <fieldset class="admin-card">
+      <legend>ช่องทางติดต่อ</legend>
+      <div class="form-row">
+        <label class="field"
+          >LINE ID
+          <input type="text" name="line" value={contact.line} />
+        </label>
+        <label class="field"
+          >ลิงก์เปิดแชท LINE
+          <input type="url" name="lineUrl" value={contact.lineUrl} placeholder="https://line.me/ti/p/..." />
+        </label>
+      </div>
+      <div class="form-row">
+        <label class="field"
+          >ชื่อเพจ Facebook
+          <input type="text" name="facebook" value={contact.facebook} />
+        </label>
+        <label class="field"
+          >ลิงก์เพจ Facebook
+          <input type="url" name="facebookUrl" value={contact.facebookUrl} placeholder="https://facebook.com/..." />
+        </label>
+      </div>
+      <div class="form-row">
+        <label class="field"
+          >เบอร์โทร
+          <input type="text" name="phone" value={contact.phone} inputmode="tel" />
+        </label>
+        <label class="field"
+          >พื้นที่
+          <input type="text" name="area" value={contact.area} />
+        </label>
+      </div>
+      <label class="field"
+        >ชื่อบัญชีรับเงิน
+        <input type="text" name="bankAccountName" value={contact.bankAccountName} />
+        <span class="admin-hint">แสดงในกล่องเตือนมิจฉาชีพ</span>
+      </label>
+    </fieldset>
+
+    <fieldset class="admin-card">
+      <legend>เฮลก้า</legend>
+      <label class="field"
+        >ตอนนี้เฮลก้าอยู่ช่วงไหน
+        <select name="currentStep">
+          {
+            timelineSteps.map((step, i) => (
+              <option value={i + 1} selected={settings.currentStep === i + 1}>
+                {i + 1}. {step.title}
+              </option>
+            ))
+          }
+        </select>
+        <span class="admin-hint">ใช้กับเส้นทางของเฮลก้าในหน้าแรก</span>
+      </label>
+      <label class="field"
+        >ครอกแรกคาดว่าเมื่อไร
+        <input type="text" name="firstLitter" value={settings.firstLitter} />
+      </label>
+      <label class="field"
+        >วันเกิดเฮลก้า
+        <input type="text" name="helgaBorn" value={settings.helga.born} />
+      </label>
+      <label class="field"
+        >นิสัยเฮลก้า (1-2 ประโยค)
+        <textarea name="helgaTemperament" rows="3">{settings.helga.temperament}</textarea>
+      </label>
+    </fieldset>
+
+    <fieldset class="admin-card">
+      <legend>ทั่วไป</legend>
+      <div class="form-row">
+        <label class="field"
+          >ชื่อแบรนด์
+          <input type="text" name="name" value={settings.name} required />
+        </label>
+        <label class="field"
+          >ชื่อภาษาไทย
+          <input type="text" name="nameTh" value={settings.nameTh} required />
+        </label>
+      </div>
+      <label class="field"
+        >ราคาลูกสุนัขพันธมิตร
+        <select name="partnerPriceMode">
+          <option value="ask" selected={settings.partnerPriceMode !== 'show'}>ไม่แสดงราคา (ทักถามราคา)</option>
+          <option value="show" selected={settings.partnerPriceMode === 'show'}>แสดงราคาบนการ์ด</option>
+        </select>
+      </label>
+    </fieldset>
+
+    <button type="submit" class="btn form-submit">บันทึก</button>
+  </form>
+</AdminLayout>

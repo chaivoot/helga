@@ -1,0 +1,32 @@
+---
+import AdminLayout from '../../layouts/AdminLayout.astro';
+import { checkPassword, isAuthenticated, isConfigured, startSession } from '../../lib/admin/auth';
+
+export const prerender = false;
+
+if (isAuthenticated(Astro.cookies)) return Astro.redirect('/admin/');
+
+let error: string | undefined;
+if (!isConfigured()) {
+  error = 'ยังไม่ได้ตั้งรหัสผ่านหลังบ้าน (ADMIN_PASSWORD)';
+} else if (Astro.request.method === 'POST') {
+  const form = await Astro.request.formData();
+  if (checkPassword(String(form.get('password') ?? ''))) {
+    startSession(Astro.cookies);
+    return Astro.redirect('/admin/');
+  }
+  // Slow down guessing a little.
+  await new Promise((resolve) => setTimeout(resolve, 1000));
+  error = 'รหัสผ่านไม่ถูกต้อง';
+}
+---
+
+<AdminLayout title="เข้าสู่ระบบหลังบ้าน" bare error={error}>
+  <form method="post" class="form admin-card">
+    <label class="field"
+      >รหัสผ่าน
+      <input type="password" name="password" required autocomplete="current-password" autofocus />
+    </label>
+    <button type="submit" class="btn form-submit">เข้าสู่ระบบ</button>
+  </form>
+</AdminLayout>

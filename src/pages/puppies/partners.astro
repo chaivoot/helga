@@ -3,7 +3,8 @@ import CtaBanner from '../../components/CtaBanner.astro';
 import FilterChips from '../../components/FilterChips.astro';
 import Icon from '../../components/Icon.astro';
 import Photo from '../../components/Photo.astro';
-import { partnerPuppies, statusLabels } from '../../data/partnerPuppies';
+import { getCollection } from 'astro:content';
+import { puppyStatuses, statusLabels } from '../../data/options';
 import { site } from '../../data/site';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 
@@ -16,9 +17,13 @@ const standards = [
 
 const filters = [
   { value: 'all', label: 'ทั้งหมด' },
-  ...Object.entries(statusLabels).map(([value, label]) => ({ value, label })),
+  ...puppyStatuses.map((value) => ({ value, label: statusLabels[value] })),
 ];
 
+// Available puppies first, then reserved, then delivered.
+const partnerPuppies = (await getCollection('puppies'))
+  .map((entry) => entry.data)
+  .sort((a, b) => puppyStatuses.indexOf(a.status) - puppyStatuses.indexOf(b.status));
 const hasPuppies = partnerPuppies.length > 0;
 ---
 

@@ -1,0 +1,149 @@
+---
+import { journalCategories } from '../../../data/options';
+import AdminLayout from '../../../layouts/AdminLayout.astro';
+import {
+  deletePost,
+  FormError,
+  getPost,
+  MAX_GALLERY,
+  savePost,
+  type JournalPost,
+} from '../../../lib/admin/content';
+
+export const prerender = false;
+
+const { id = '' } = Astro.params;
+const isNew = id === 'new';
+const existing = isNew ? null : await getPost(id);
+if (!isNew && !existing) return Astro.redirect('/admin/journal/');
+
+let error: string | undefined;
+// After a failed save, show what was typed, not what is stored.
+let draft: Partial<JournalPost> = existing ?? {};
+
+if (Astro.request.method === 'POST') {
+  const form = await Astro.request.formData();
+  try {
+    if (form.get('_action') === 'delete' && existing) {
+      await deletePost(existing.id);
+      return Astro.redirect('/admin/journal/?deleted');
+    }
+    await savePost(existing?.id ?? null, form);
+    return Astro.redirect('/admin/journal/?saved');
+  } catch (cause) {
+    if (!(cause instanceof FormError)) console.error(cause);
+    error = cause instanceof FormError ? cause.message : 'บันทึกไม่สำเร็จ กรุณาลองอีกครั้ง';
+    const age = String(form.get('ageMonths') ?? '');
+    draft = {
+      ...draft,
+      title: String(form.get('title') ?? ''),
+      excerpt: String(form.get('excerpt') ?? ''),
+      category: journalCategories.find((value) => value === form.get('category')),
+      date: String(form.get('date') ?? ''),
+      ageMonths: age === '' ? undefined : Number(age),
+      body: String(form.get('body') ?? ''),
+    };
+  }
+}
+
+const imageUrl = (ref: string) => `/admin/image?ref=${encodeURIComponent(ref)}`;
+---
+
+<AdminLayout
+  title={isNew ? 'เขียนบันทึกใหม่' : 'แก้ไขบันทึก'}
+  back={{ href: '/admin/journal/', label: 'บันทึกทั้งหมด' }}
+  error={error}
+>
+  <form method="post" enctype="multipart/form-data" class="form admin-form admin-card" data-saving>
+    <label class="field"
+      >หัวข้อ
+      <input type="text" name="title" value={draft.title} required placeholder="เช่น เฮลก้า 4 เดือน: เริ่มฝึกเดินสายจูง" />
+    </label>
+    <label class="field"
+      >คำโปรย
+      <textarea name="excerpt" rows="2" required>{draft.excerpt}</textarea>
+      <span class="admin-hint">ประโยคสั้นๆ ที่แสดงใต้หัวข้อในหน้ารวมบันทึก</span>
+    </label>
+    <div class="form-row">
+      <label class="field"
+        >หมวด
+        <select name="category" required>
+          {
+            journalCategories.map((category) => (
+              <option selected={draft.category === category}>{category}</option>
+            ))
+          }
+        </select>
+      </label>
+      <label class="field"
+        >วันที่โพสต์
+        <input type="date" name="date" value={draft.date} />
+      </label>
+      <label class="field"
+        >อายุเฮลก้า (เดือน)
+        <input type="number" name="ageMonths" value={draft.ageMonths} min="0" max="299" inputmode="numeric" />
+      </label>
+    </div>
+
+    <label class="field"
+      >รูปหลัก
+      {
+        existing?.cover && (
+          <span class="admin-photo">
+            <img src={imageUrl(existing.cover)} alt="รูปหลักปัจจุบัน" />
+            {existing.tempPhotos
+              ? 'ตอนนี้เป็นรูปตัวอย่าง เลือกรูปจริงเพื่อแทนที่'
+              : 'เลือกรูปใหม่ถ้าต้องการเปลี่ยน'}
+          </span>
+        )
+      }
+      <input type="file" name="cover" accept="image/jpeg,image/png,image/webp" required={!existing?.cover} />
+    </label>
+
+    <label class="field"
+      >เนื้อหา
+      <textarea name="body" rows="12">{draft.body}</textarea>
+      <span class="admin-hint">
+        เว้นหนึ่งบรรทัดว่างเพื่อขึ้นย่อหน้าใหม่ ถ้าต้องการหัวข้อย่อย ให้ขึ้นบรรทัดด้วย ## แล้วตามด้วยหัวข้อ
+      </span>
+    </label>
+
+    <div class="field">
+      แกลเลอรี (ไม่เกิน {MAX_GALLERY} รูป)
+      {
+        existing && existing.gallery.length > 0 && (
+          <div class="admin-gallery">
+            {existing.gallery.map((ref, i) => (
+              <label class="admin-photo" style="flex-direction:column;align-items:flex-start;gap:6px">
+                <img src={imageUrl(ref)} alt={`รูปแกลเลอรี ${i + 1}`} />
+                <span>
+                  <input type="checkbox" name="removeGallery" value={ref} /> ลบรูปนี้
+                </span>
+              </label>
+            ))}
+          </div>
+        )
+      }
+      <label class="admin-hint" for="gallery">เพิ่มรูป (เลือกได้หลายรูป)</label>
+      <input id="gallery" type="file" name="gallery" accept="image/jpeg,image/png,image/webp" multiple />
+    </div>
+
+    <div class="admin-actions">
+      <button type="submit" class="btn form-submit">{isNew ? 'เผยแพร่บันทึก' : 'บันทึกการแก้ไข'}</button>
+      {
+        existing && (
+          <button
+            type="submit"
+            name="_action"
+            value="delete"
+            class="admin-delete"
+            formnovalidate
+            data-confirm="ลบบันทึกนี้ถาวรใช่ไหม?"
+          >
+            ลบบันทึกนี้
+          </button>
+        )
+      }
+    </div>
+  </form>
+</AdminLayout>

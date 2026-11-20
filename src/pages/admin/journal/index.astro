@@ -1,0 +1,33 @@
+---
+import AdminLayout from '../../../layouts/AdminLayout.astro';
+import { listPosts } from '../../../lib/admin/content';
+
+export const prerender = false;
+
+const posts = await listPosts();
+const imageUrl = (ref: string) => `/admin/image?ref=${encodeURIComponent(ref)}`;
+---
+
+<AdminLayout title="บันทึกเฮลก้า">
+  <a href="/admin/journal/new/" class="btn" style="align-self:flex-start">+ เขียนบันทึกใหม่</a>
+  {posts.length === 0 && <p class="admin-hint">ยังไม่มีบันทึก</p>}
+  <div class="admin-list">
+    {
+      posts.map((post) => (
+        <a href={`/admin/journal/${post.id}/`} class="admin-item">
+          <img src={imageUrl(post.cover)} alt="" loading="lazy" />
+          <span class="admin-item-text">
+            <strong>{post.title}</strong>
+            <span>
+              {post.category} · {post.date ?? 'ยังไม่ใส่วันที่'}
+              {post.tempPhotos && ' · รูปตัวอย่าง'}
+            </span>
+          </span>
+          <span class="admin-item-go" aria-hidden="true">
+            →
+          </span>
+        </a>
+      ))
+    }
+  </div>
+</AdminLayout>

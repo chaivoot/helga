@@ -1,0 +1,145 @@
+---
+import '@fontsource-variable/anuphan';
+import '@fontsource/noto-sans-thai-looped/400.css';
+import '@fontsource/noto-sans-thai-looped/500.css';
+import '@fontsource/noto-sans-thai-looped/600.css';
+import '../styles/global.css';
+import '../styles/admin.css';
+
+interface Props {
+  title: string;
+  /** Hide the navigation (login page). */
+  bare?: boolean;
+  /** Link back to the list this page belongs to. */
+  back?: { href: string; label: string };
+  error?: string;
+}
+
+const { title, bare = false, back, error } = Astro.props;
+const saved = Astro.url.searchParams.has('saved');
+const deleted = Astro.url.searchParams.has('deleted');
+
+const links = [
+  { href: '/admin/journal/', label: 'บันทึกเฮลก้า' },
+  { href: '/admin/puppies/', label: 'ลูกสุนัขพันธมิตร' },
+  { href: '/admin/settings/', label: 'ข้อมูลเว็บ' },
+];
+---
+
+<!doctype html>
+<html lang="th">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>{title} | หลังบ้าน</title>
+  </head>
+  <body class="admin">
+    {
+      !bare && (
+        <header class="admin-bar">
+          <div class="admin-wrap admin-bar-row">
+            <a href="/admin/" class="admin-home head-font">
+              หลังบ้าน
+            </a>
+            <nav aria-label="เมนูหลังบ้าน">
+              {links.map((link) => (
+                <a
+                  href={link.href}
+                  aria-current={Astro.url.pathname.startsWith(link.href) ? 'page' : undefined}
+                >
+                  {link.label}
+                </a>
+              ))}
+            </nav>
+            <form method="post" action="/admin/logout/">
+              <button type="submit" class="admin-linkbtn">
+                ออกจากระบบ
+              </button>
+            </form>
+          </div>
+        </header>
+      )
+    }
+    <main class="admin-wrap admin-main">
+      {back && <a href={back.href} class="admin-back">← {back.label}</a>}
+      <h1>{title}</h1>
+      {
+        saved && (
+          <p class="admin-notice" role="status">
+            บันทึกแล้ว หน้าเว็บจะอัปเดตภายใน 1-2 นาที
+          </p>
+        )
+      }
+      {
+        deleted && (
+          <p class="admin-notice" role="status">
+            ลบแล้ว หน้าเว็บจะอัปเดตภายใน 1-2 นาที
+          </p>
+        )
+      }
+      {
+        error && (
+          <p class="admin-error" role="alert">
+            {error}
+          </p>
+        )
+      }
+      <slot />
+    </main>
+
+    <script>
+      // Phone photos are far larger than the site needs (and than a request
+      // may carry), so shrink them in the browser before they are uploaded.
+      const MAX_SIDE = 1600;
+
+      async function shrink(file: File): Promise<File> {
+        if (!file.type.startsWith('image/')) return file;
+        try {
+          const bitmap = await createImageBitmap(file);
+          const scale = Math.min(1, MAX_SIDE / Math.max(bitmap.width, bitmap.height));
+          const canvas = document.createElement('canvas');
+          canvas.width = Math.round(bitmap.width * scale);
+          canvas.height = Math.round(bitmap.height * scale);
+          canvas.getContext('2d')?.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+          const blob = await new Promise<Blob | null>((resolve) =>
+            canvas.toBlob(resolve, 'image/jpeg', 0.85),
+          );
+          if (!blob) return file;
+          return new File([blob], file.name.replace(/\.\w+$/, '') + '.jpg', { type: 'image/jpeg' });
+        } catch {
+          return file;
+        }
+      }
+
+      document.querySelectorAll<HTMLInputElement>('input[type="file"]').forEach((input) => {
+        input.addEventListener('change', async () => {
+          if (!input.files?.length) return;
+          const submit = input.form?.querySelector<HTMLButtonElement>('button[type="submit"]');
+          if (submit) submit.disabled = true;
+          const transfer = new DataTransfer();
+          for (const file of input.files) transfer.items.add(await shrink(file));
+          input.files = transfer.files;
+          if (submit) submit.disabled = false;
+        });
+      });
+
+      document.querySelectorAll<HTMLButtonElement>('[data-confirm]').forEach((button) => {
+        button.addEventListener('click', (event) => {
+          if (!window.confirm(button.dataset.confirm)) event.preventDefault();
+        });
+      });
+
+      document.querySelectorAll<HTMLFormElement>('form[data-saving]').forEach((form) => {
+        form.addEventListener('submit', (event) => {
+          const submitter = (event as SubmitEvent).submitter as HTMLButtonElement | null;
+          // Let the click finish submitting before the buttons lock.
+          setTimeout(() => {
+            form.querySelectorAll('button').forEach((button) => (button.disabled = true));
+            if (submitter) submitter.textContent = 'กำลังบันทึก...';
+          });
+        });
+      });
+    </script>
+  </body>
+</html>

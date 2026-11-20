@@ -1,0 +1,12 @@
+{
+  "status": "delivered",
+  "farm": "[ชื่อฟาร์มพันธมิตร]",
+  "sex": "[ ]",
+  "color": "[ ]",
+  "born": "[ ]",
+  "sire": "[ชื่อพ่อ]",
+  "dam": "[ชื่อแม่]",
+  "price": "[ราคา] บาท",
+  "photo": "../../assets/images/tri-pup-patio.webp",
+  "tempPhoto": true
+}

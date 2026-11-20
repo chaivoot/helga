@@ -1,0 +1,141 @@
+---
+import { puppyStatuses, statusLabels } from '../../../data/options';
+import AdminLayout from '../../../layouts/AdminLayout.astro';
+import {
+  deletePuppy,
+  FormError,
+  getPuppy,
+  savePuppy,
+  type Puppy,
+} from '../../../lib/admin/content';
+
+export const prerender = false;
+
+const { id = '' } = Astro.params;
+const isNew = id === 'new';
+const existing = isNew ? null : await getPuppy(id);
+if (!isNew && !existing) return Astro.redirect('/admin/puppies/');
+
+let error: string | undefined;
+// After a failed save, show what was typed, not what is stored.
+let draft: Partial<Puppy> = existing ?? {};
+
+if (Astro.request.method === 'POST') {
+  const form = await Astro.request.formData();
+  try {
+    if (form.get('_action') === 'delete' && existing) {
+      await deletePuppy(existing.id);
+      return Astro.redirect('/admin/puppies/?deleted');
+    }
+    await savePuppy(existing?.id ?? null, form);
+    return Astro.redirect('/admin/puppies/?saved');
+  } catch (cause) {
+    if (!(cause instanceof FormError)) console.error(cause);
+    error = cause instanceof FormError ? cause.message : 'บันทึกไม่สำเร็จ กรุณาลองอีกครั้ง';
+    const typed = (name: string) => String(form.get(name) ?? '');
+    draft = {
+      ...draft,
+      status: puppyStatuses.find((value) => value === form.get('status')),
+      farm: typed('farm'),
+      sex: typed('sex'),
+      color: typed('color'),
+      born: typed('born'),
+      sire: typed('sire'),
+      dam: typed('dam'),
+      price: typed('price'),
+    };
+  }
+}
+
+const sexes = ['เพศผู้', 'เพศเมีย'];
+const imageUrl = (ref: string) => `/admin/image?ref=${encodeURIComponent(ref)}`;
+---
+
+<AdminLayout
+  title={isNew ? 'เพิ่มลูกสุนัข' : 'แก้ไขลูกสุนัข'}
+  back={{ href: '/admin/puppies/', label: 'ลูกสุนัขทั้งหมด' }}
+  error={error}
+>
+  <form method="post" enctype="multipart/form-data" class="form admin-form admin-card" data-saving>
+    <label class="field"
+      >สถานะ
+      <select name="status" required>
+        {
+          puppyStatuses.map((status) => (
+            <option value={status} selected={draft.status === status}>
+              {statusLabels[status]}
+            </option>
+          ))
+        }
+      </select>
+    </label>
+    <label class="field"
+      >ชื่อฟาร์มพันธมิตร
+      <input type="text" name="farm" value={draft.farm} required />
+    </label>
+    <div class="form-row">
+      <label class="field"
+        >เพศ
+        <select name="sex">
+          {!sexes.includes(draft.sex ?? '') && <option value={draft.sex ?? ''}>{draft.sex || 'ยังไม่ระบุ'}</option>}
+          {sexes.map((sex) => <option selected={draft.sex === sex}>{sex}</option>)}
+        </select>
+      </label>
+      <label class="field"
+        >สี
+        <input type="text" name="color" value={draft.color} placeholder="เช่น เซเบิล" />
+      </label>
+      <label class="field"
+        >วันเกิด
+        <input type="text" name="born" value={draft.born} placeholder="เช่น 5 ม.ค. 2570" />
+      </label>
+    </div>
+    <div class="form-row">
+      <label class="field"
+        >ชื่อพ่อ
+        <input type="text" name="sire" value={draft.sire} />
+      </label>
+      <label class="field"
+        >ชื่อแม่
+        <input type="text" name="dam" value={draft.dam} />
+      </label>
+    </div>
+    <label class="field"
+      >ราคา
+      <input type="text" name="price" value={draft.price} placeholder="เช่น 35,000 บาท" />
+      <span class="admin-hint">จะแสดงก็ต่อเมื่อเปิด "แสดงราคาบนการ์ด" ในหน้าข้อมูลเว็บ</span>
+    </label>
+    <label class="field"
+      >รูปลูกสุนัข
+      {
+        existing?.photo && (
+          <span class="admin-photo">
+            <img src={imageUrl(existing.photo)} alt="รูปปัจจุบัน" />
+            {existing.tempPhoto
+              ? 'ตอนนี้เป็นรูปตัวอย่าง เลือกรูปจริงเพื่อแทนที่'
+              : 'เลือกรูปใหม่ถ้าต้องการเปลี่ยน'}
+          </span>
+        )
+      }
+      <input type="file" name="photo" accept="image/jpeg,image/png,image/webp" required={!existing?.photo} />
+    </label>
+
+    <div class="admin-actions">
+      <button type="submit" class="btn form-submit">{isNew ? 'เพิ่มลูกสุนัข' : 'บันทึกการแก้ไข'}</button>
+      {
+        existing && (
+          <button
+            type="submit"
+            name="_action"
+            value="delete"
+            class="admin-delete"
+            formnovalidate
+            data-confirm="ลบลูกสุนัขตัวนี้ถาวรใช่ไหม?"
+          >
+            ลบลูกสุนัขตัวนี้
+          </button>
+        )
+      }
+    </div>
+  </form>
+</AdminLayout>

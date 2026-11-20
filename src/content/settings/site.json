@@ -1,0 +1,20 @@
+{
+  "name": "Helga House",
+  "nameTh": "บ้านเชลตี้ เฮลก้าเฮาส์",
+  "contact": {
+    "line": "[ ]",
+    "lineUrl": "",
+    "facebook": "[ ]",
+    "facebookUrl": "",
+    "phone": "[ ]",
+    "area": "[ ]",
+    "bankAccountName": "[ชื่อบัญชีที่ถูกต้อง]"
+  },
+  "currentStep": 1,
+  "firstLitter": "[ปีโดยประมาณ หรือ เมื่อเฮลก้าพร้อมเต็มที่]",
+  "partnerPriceMode": "ask",
+  "helga": {
+    "born": "[ ]",
+    "temperament": "[นิสัยเฮลก้า 1-2 ประโยค]"
+  }
+}

@@ -1,0 +1,42 @@
+---
+import { statusLabels } from '../../../data/options';
+import AdminLayout from '../../../layouts/AdminLayout.astro';
+import { listPuppies } from '../../../lib/admin/content';
+
+export const prerender = false;
+
+const puppies = await listPuppies();
+const imageUrl = (ref: string) => `/admin/image?ref=${encodeURIComponent(ref)}`;
+---
+
+<AdminLayout title="ลูกสุนัขพันธมิตร">
+  <a href="/admin/puppies/new/" class="btn" style="align-self:flex-start">+ เพิ่มลูกสุนัข</a>
+  {
+    puppies.length === 0 && (
+      <p class="admin-hint">
+        ยังไม่มีลูกสุนัข หน้าเว็บจะแสดงข้อความ "ตอนนี้ยังไม่มีลูกสุนัขพร้อมส่งมอบ"
+      </p>
+    )
+  }
+  <div class="admin-list">
+    {
+      puppies.map((puppy) => (
+        <a href={`/admin/puppies/${puppy.id}/`} class="admin-item">
+          <img src={imageUrl(puppy.photo)} alt="" loading="lazy" />
+          <span class="admin-item-text">
+            <strong>
+              {statusLabels[puppy.status]} · {puppy.farm}
+            </strong>
+            <span>
+              {puppy.sex} · {puppy.color}
+              {puppy.tempPhoto && ' · รูปตัวอย่าง'}
+            </span>
+          </span>
+          <span class="admin-item-go" aria-hidden="true">
+            →
+          </span>
+        </a>
+      ))
+    }
+  </div>
+</AdminLayout>

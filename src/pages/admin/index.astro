@@ -1,0 +1,39 @@
+---
+import AdminLayout from '../../layouts/AdminLayout.astro';
+
+export const prerender = false;
+
+const tiles = [
+  {
+    href: '/admin/journal/',
+    title: 'บันทึกเฮลก้า',
+    text: 'เขียนบันทึกใหม่ แก้ไข หรือลบบันทึกเดิม',
+  },
+  {
+    href: '/admin/puppies/',
+    title: 'ลูกสุนัขพันธมิตร',
+    text: 'เพิ่มลูกสุนัข เปลี่ยนสถานะ ว่าง / จองแล้ว / ส่งมอบแล้ว',
+  },
+  {
+    href: '/admin/settings/',
+    title: 'ข้อมูลเว็บ',
+    text: 'ช่องทางติดต่อ สถานะของเฮลก้า และข้อมูลทั่วไป',
+  },
+];
+---
+
+<AdminLayout title="หลังบ้าน">
+  <div class="admin-tiles">
+    {
+      tiles.map((tile) => (
+        <a href={tile.href} class="admin-tile">
+          <strong>{tile.title}</strong>
+          <span>{tile.text}</span>
+        </a>
+      ))
+    }
+  </div>
+  <p class="admin-hint">
+    ทุกครั้งที่กดบันทึก หน้าเว็บจะอัปเดตเองภายใน 1-2 นาที <a href="/" target="_blank">เปิดหน้าเว็บ</a>
+  </p>
+</AdminLayout>

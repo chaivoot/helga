@@ -5,21 +5,15 @@ import Photo from '../components/Photo.astro';
 import ScamWarning from '../components/ScamWarning.astro';
 import { images } from '../data/images';
 import { getJournalPosts } from '../data/journal';
+import { timelineSteps } from '../data/options';
 import { site } from '../data/site';
 import BaseLayout from '../layouts/BaseLayout.astro';
 
 const { contact } = site;
 
-const steps = [
-  { title: 'ลูกสุนัข', desc: 'เรียนรู้การเข้าสังคมและฝึกพื้นฐาน' },
-  {
-    title: 'ช่วงเติบโต',
-    desc: 'ดูแลโภชนาการ ออกกำลังกาย และฝึกต่อเนื่องกับครูฝึกโรงเรียนหมาสนุก',
-  },
-  { title: 'ก่อนเป็นแม่', desc: 'ตรวจสุขภาพตามมาตรฐาน และคัดเลือกพ่อพันธุ์ที่เหมาะสม' },
-  { title: 'ครอกแรก', desc: '[ปีโดยประมาณ หรือ เมื่อเฮลก้าพร้อมเต็มที่]' },
-].map((step, i) => ({
-  ...step,
+const steps = timelineSteps.map((step, i) => ({
+  title: step.title,
+  desc: step.desc || site.firstLitter,
   num: i + 1,
   state: i + 1 === site.currentStep ? 'current' : i + 1 < site.currentStep ? 'done' : 'todo',
 }));
