@@ -6,7 +6,7 @@ Website for Helga House, a Shetland Sheepdog (Sheltie) home breeder. Static site
 
 ```bash
 npm install
-npm run dev      # local dev server (temporary photos visible)
+npm run dev      # local dev server
 npm run build    # static build into dist/
 npm run preview  # serve the build
 npm run check    # type-check .astro and .ts files
@@ -39,5 +39,5 @@ Text in `[square brackets]` on the site is a placeholder waiting for real conten
 Every image in `src/assets/images/` is AI-generated.
 
 - On the knowledge pages they are used as illustrations and labelled "ภาพประกอบ".
-- Slots that need a real photo (Helga, parents, partner puppies, journal) are marked `temp` on `<Photo>` (or `tempPhotos: true` / `tempPhoto: true` in the data). These render the temporary image in `npm run dev` only; a build shows a striped "รอรูปจริง" slot instead, so AI images cannot go live in those places by accident. Set `PUBLIC_SHOW_TEMP_PHOTOS=true` to preview a build with them.
+- Slots that need a real photo (Helga, parents, partner puppies, journal) are marked `temp` on `<Photo>` (or `tempPhotos: true` / `tempPhoto: true` in the data). They currently show the temporary AI image so the site can be presented as a complete sample. These must be replaced with real photos before the public launch; set `PUBLIC_SHOW_TEMP_PHOTOS=false` to show a striped "รอรูปจริง" slot in their place instead.
 - When a real photo arrives: add it to `src/assets/images/`, point the slot at it, and remove the `temp` flag. Every image needs Thai `alt` text.

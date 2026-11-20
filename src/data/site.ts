@@ -35,14 +35,11 @@ export const nav: { id: NavId; label: string; href: string }[] = [
   { id: 'contact', label: 'ติดต่อ', href: '/contact/' },
 ];
 
-const tempPhotosFlag = import.meta.env.PUBLIC_SHOW_TEMP_PHOTOS;
-
 /**
- * Temporary AI photos must not go live in slots meant for real photos.
- * They show in dev so the layout can be reviewed; builds show a waiting slot
- * unless PUBLIC_SHOW_TEMP_PHOTOS=true.
+ * Whether slots that are meant for real photos (Helga, parents, partner
+ * puppies, journal) show the temporary AI stand-ins. On by default so the
+ * site can be presented as a complete sample. Set
+ * PUBLIC_SHOW_TEMP_PHOTOS=false to show a striped "waiting for photo" slot
+ * instead, e.g. for the public launch if real photos are not ready.
  */
-export const showTempPhotos: boolean =
-  tempPhotosFlag === undefined || tempPhotosFlag === ''
-    ? import.meta.env.DEV
-    : tempPhotosFlag === 'true';
+export const showTempPhotos: boolean = import.meta.env.PUBLIC_SHOW_TEMP_PHOTOS !== 'false';
